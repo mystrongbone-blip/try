@@ -1,0 +1,4729 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>放射師國考神器</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#14151b;--panel:#1a1b22;--border:#2b2d38;--text:#e8e8ee;--muted:#9aa0b0;--accent:#4f8cff;--accent2:#6ea8ff;--green:#39d98a}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:"Segoe UI","Microsoft JhengHei","PingFang TC",system-ui,sans-serif}
+header{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--border);flex-wrap:wrap}
+header h1{font-size:16px;margin:0;font-weight:700;white-space:nowrap;color:#fff}
+button{background:#262a36;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;cursor:pointer}
+button:hover{border-color:var(--accent);color:#fff}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.green{background:#0e9f6e;border-color:#0e9f6e;color:#fff}
+button.purple{background:#7c3aed;border-color:#7c3aed;color:#fff}
+button.red{background:#e11d48;border-color:#e11d48;color:#fff}
+button.yellow{background:#f59e0b;border-color:#f59e0b;color:#111827}
+.close-x{background:#e11d48 !important;color:#fff !important;border-color:#e11d48 !important}
+#crumb{font-size:12px;color:var(--muted);margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:34%}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:#2c313f;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s;z-index:99}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#home{flex:1;overflow-y:auto;padding:28px 40px}
+#home h2{color:#fff;margin:8px 0 20px;font-size:22px}
+#home .sub{color:var(--muted);font-size:13px;margin-bottom:26px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.scard{background:linear-gradient(145deg,#232838,#1a1f2e);border:1px solid var(--border);border-radius:14px;padding:20px;cursor:pointer;transition:.2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.scard:hover{border-color:var(--accent);transform:translateY(-3px)}
+.scard .icon{font-size:34px}
+.scard .name{font-size:16px;font-weight:700;margin-top:10px}
+.scard .cnt{font-size:12px;color:var(--muted);margin-top:4px}
+.scard .tool{margin-top:4px;font-size:11px;padding:3px 8px}
+.rounds{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-top:14px}
+.rbtn{background:#262a36;border:1px solid var(--border);border-radius:10px;padding:14px 8px;text-align:center;cursor:pointer;font-size:15px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:6px}
+.rbtn:hover{border-color:var(--accent);background:#2f3644}
+.rbtn .tool{font-size:11px;padding:2px 6px}
+#view{flex:1;display:none;min-height:0;flex-direction:column}
+#viewTop,#libTools{flex:none;display:flex;align-items:center;gap:6px;padding:8px 14px;background:#181a22;border-bottom:1px solid var(--border);flex-wrap:wrap;font-size:12px;color:var(--muted);position:relative;z-index:30}
+.tool{border-radius:6px;padding:3px 8px;font-size:12px;border:1px solid var(--border);background:#262a36;color:var(--text)}
+.tool.on{background:var(--accent);color:#fff}
+input[type=color]{width:26px;height:22px;border:1px solid var(--border);border-radius:5px;background:transparent;padding:0;cursor:pointer}
+.hl-btn{width:18px;height:16px;display:inline-block;cursor:pointer;border:1px solid #999;border-radius:5px}
+#docWrap{flex:1;overflow-y:auto;background:#fff;padding:14px;position:relative}
+#doc,.libq-body{max-width:1000px;margin:0 auto;background:#fff;font-size:17px;line-height:1.9;color:#222}
+#doc p,#doc .options,.libq-body p,.libq-body .options{font-size:17px}
+#doc h1,.libq-body h1{color:#333;border-bottom:3px solid #999;padding-bottom:8px}
+#doc h2,.libq-body h2{color:#333;border-left:5px solid #cc0000;padding-left:10px;margin:38px 0 10px;font-size:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#doc .answer,.libq-body .answer{color:#cc0000;font-weight:bold;font-size:17px}
+#doc .solution,#doc .know,#doc .sim,.libq-body .solution,.libq-body .know,.libq-body .sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:14px;margin:10px 0;font-size:16px;line-height:1.85}
+#doc .know,.libq-body .know{background:#E3F2FD;border-color:#2196F3}
+#doc .sim,.libq-body .sim{background:#E8F5E9;border-color:#4CAF50}
+#doc table,.libq-body table{border-collapse:collapse;width:100%;margin:10px 0;font-size:15px}
+#doc th,.libq-body th{background:#FFF3CD;border:1px solid #bbb;padding:8px;font-size:15px}
+#doc td,.libq-body td{border:1px solid #bbb;padding:8px;vertical-align:top;font-size:15px}
+#doc img,.libq-body img{max-width:100%}
+#doc.hl-mode,#lib.hl-mode,#cmpRightR.hl-mode,.win-right.hl-mode,.win-body.hl-mode{cursor:crosshair}
+#doc img.movable-img,#lib .movable-img,#cmpRightR .movable-img,.win-right .movable-img{cursor:move}
+#doc img.movable-img.selected,#lib .movable-img.selected,#cmpRightR .movable-img.selected{outline:2px solid #4f8cff;outline-offset:1px}
+.img-handle{position:fixed;width:12px;height:12px;background:#fff;border:2px solid #4f8cff;border-radius:50%;z-index:998;box-shadow:0 1px 4px rgba(0,0,0,.35)}
+.img-rotate{position:fixed;width:16px;height:16px;background:#ffb454;border:2px solid #fff;border-radius:50%;z-index:998;box-shadow:0 1px 4px rgba(0,0,0,.35);cursor:grab}
+.img-tools{position:fixed;z-index:998;display:flex;gap:4px;background:#1f2937;border-radius:8px;padding:4px 6px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.img-tools button{background:#374151;color:#fff;border:none;border-radius:5px;padding:2px 8px;font-size:11px;cursor:pointer}
+.saveQ{margin-left:auto;font-size:13px;color:#333;display:flex;align-items:center;gap:5px;white-space:nowrap;background:#f0f4fa;border:1px solid #cfd8e6;border-radius:8px;padding:3px 10px;cursor:pointer;user-select:none}
+.saveQ input{accent-color:var(--accent)}
+#doc .sim-add,#doc .sim .sim-add{display:inline-block;margin-left:8px;font-size:16px !important;line-height:1.6 !important;padding:4px 10px;cursor:pointer;border-radius:6px;border:1px solid #bbb;background:#f0f4fa;color:#333;vertical-align:middle}
+#lib{flex:1;display:none;flex-direction:column;min-height:0;background:#14151b}
+#libScroll{flex:1;overflow-y:auto}
+#libBody{padding:28px 40px}
+.lsub{display:flex;align-items:center;justify-content:space-between;margin:22px 0 8px;color:#fff;font-size:18px;font-weight:700}
+.litem{display:flex;align-items:center;gap:10px;background:#1e2330;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:6px 0;font-size:14px}
+.litem .tag{background:#2c384b;border-radius:6px;padding:2px 8px;font-size:12px;color:var(--accent2);white-space:nowrap}
+.litem .q{flex:1;color:#dde3ee;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.litem button{flex:none;padding:4px 10px;font-size:12px}
+.libview .libq,.libq{border:1px solid var(--border);border-radius:12px;margin:16px 0;background:#191d28;overflow:hidden}
+.libview .libq-head,.libq .libq-head{display:flex;align-items:center;gap:6px;padding:8px 14px;background:#222838;color:#cfe1ff;font-size:13px;font-weight:700;flex-wrap:wrap}
+.libview .libq-head .dirty,.libq .libq-head .dirty{color:#ffb454;font-size:11px;display:none}
+.libview .libq-head button,.libq .libq-head button{padding:3px 10px;font-size:12px}
+.libview .libq-body,.libq-body{background:#fff;color:#222;font-size:17px;line-height:1.9;padding:14px 18px;border-radius:0 0 10px 10px}
+.libview .libq-body h2,.libq-body h2{color:#333;border-left:5px solid #cc0000;padding-left:10px;margin:10px 0}
+.libview .libq-body .answer,.libq-body .answer{color:#cc0000;font-weight:bold}
+.libview .libq-body .solution,.libview .libq-body .know,.libview .libq-body .sim,.libq-body .solution,.libq-body .know,.libq-body .sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:12px;margin:8px 0}
+.libview .libq-body .know,.libq-body .know{background:#E3F2FD;border-color:#2196F3}
+.libview .libq-body .sim,.libq-body .sim{background:#E8F5E9;border-color:#4CAF50}
+.libview .libq-body table,.libq-body table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14px}
+.libview .libq-body th,.libq-body th{background:#FFF3CD;border:1px solid #bbb;padding:6px}
+.libview .libq-body td,.libq-body td{border:1px solid #bbb;padding:6px;vertical-align:top}
+.libview .libq-body img,.libq-body img{max-width:100%}
+details.lsub-box{background:#1e2330;border:1px solid var(--border);border-radius:10px;margin:10px 0;padding:8px 12px}
+details.lsub-box>summary{cursor:pointer;color:#fff;font-size:15px;font-weight:700;padding:4px 0}
+details.lsub-box details>summary{cursor:pointer;color:#8fd0ff;font-size:14px;font-weight:700;padding:4px 0}
+details.lsub-box details .litem{margin:6px 0 6px 18px}
+.win{position:fixed;right:12px;width:472px;max-height:82vh;background:#fff;color:#222;border:2px solid var(--accent);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:999;display:flex;flex-direction:column;resize:none;overflow:visible;min-width:300px;min-height:200px}
+.win-resize{position:absolute;width:14px;height:14px;background:#4f8cff;border:2px solid #fff;border-radius:50%;z-index:1000;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.win-resize.nw{left:-7px;top:-7px;cursor:nwse-resize}
+.win-resize.ne{right:-7px;top:-7px;cursor:nesw-resize}
+.win-resize.sw{left:-7px;bottom:-7px;cursor:nesw-resize}
+.win-resize.se{right:-7px;bottom:-7px;cursor:nwse-resize}
+/* ═══════ 手機＋平板：相似題型視窗固定大小（桌機仍可縮放） ═══════ */
+@media (max-width:1180px){
+  .win{
+    width:94vw !important;
+    max-height:80vh !important;
+    min-width:94vw !important;
+    min-height:300px !important;
+    right:3vw !important;
+    left:3vw !important;
+  }
+  .win-resize{display:none !important}
+}
+.win-head{display:flex;align-items:center;gap:6px;padding:8px 12px;background:#1f2937;color:#fff;border-radius:10px 10px 0 0;cursor:move;font-size:13px;font-weight:700;flex:none;flex-wrap:wrap}
+.win-head button{padding:2px 8px;font-size:12px}
+/* ═══════ 手機版：相似題型視窗 觸控移動/縮放 ═══════ */
+.win-head,.win-resize{
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+.win-tools{flex:none;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 12px;background:#f0f4fa;border-bottom:1px solid #d9dee8;position:relative;z-index:30}
+.win-tools .tool{font-size:11px;padding:3px 7px}
+.win-body{overflow-y:auto;padding:12px 14px;font-size:15px;line-height:1.8;flex:1;min-height:0}
+.win-body h2{color:#333;border-left:5px solid #cc0000;padding-left:10px;margin:8px 0}
+.win-body .answer{color:#cc0000;font-weight:bold}
+.win-body .solution,.win-body .know,.win-body .sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:12px;margin:8px 0}
+.win-body .know{background:#E3F2FD;border-color:#2196F3}
+.win-body .sim{background:#E8F5E9;border-color:#4CAF50}
+.win-body table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14px}
+.win-body th{background:#FFF3CD;border:1px solid #bbb;padding:6px}
+.win-body td{border:1px solid #bbb;padding:6px;vertical-align:top}
+.win-body img{max-width:100%}
+.win-cols{display:flex;min-height:320px;border:1px solid #d9dee8;border-radius:8px;overflow:hidden}
+.win-cols>div{flex:1;min-width:0;overflow-y:auto;padding:10px 12px;font-size:15px;line-height:1.8}
+.win-left{border-right:1px solid #d9dee8;background:#fff}
+.win-right{background:#fbfdff}
+.win-side-heads{flex:none;display:flex;border-bottom:1px solid #d9dee8;background:#eef3fb;position:relative;z-index:30}
+.win-side-heads .win-side-label{flex:1;font-weight:700;padding:6px 10px;font-size:13px;color:#1f2937;text-align:center;border-right:1px solid #d9dee8}
+.win-side-heads .win-side-label:last-child{border-right:none}
+.win-right-body{padding:10px 12px}
+#compareView{position:fixed;inset:0;z-index:1000;background:#14151b;display:none;flex-direction:column}
+#compareView .cv-head{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#1f2937;color:#fff;font-weight:700;flex:none;flex-wrap:wrap}
+#compareView .cv-head button{padding:4px 12px}
+#compareView #cmpTools{flex:none;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 16px;background:#181a22;border-bottom:1px solid var(--border);position:relative;z-index:30}
+#compareView .cv-cols{flex:1;display:flex;min-height:0}
+#compareView .cv-pane{flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--border)}
+#compareView .cv-pane .cv-title{flex:none;padding:6px 12px;background:#222838;color:#cfe1ff;font-size:13px;font-weight:700;position:relative;z-index:30}
+#compareView .cv-doc{flex:1;overflow-y:auto;background:#fff;padding:12px 16px;font-size:16px;line-height:1.85;color:#222}
+#compareView .cv-doc h1{color:#333;border-bottom:3px solid #999;padding-bottom:8px}
+#compareView .cv-doc h2{color:#333;border-left:5px solid #cc0000;padding-left:10px;margin:20px 0 10px;font-size:18px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+#compareView .cv-doc .answer{color:#cc0000;font-weight:bold}
+#compareView .cv-doc .solution,#compareView .cv-doc .know,#compareView .cv-doc .sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:12px;margin:8px 0}
+#compareView .cv-doc .know{background:#E3F2FD;border-color:#2196F3}
+#compareView .cv-doc .sim{background:#E8F5E9;border-color:#4CAF50}
+#compareView .cv-doc table{border-collapse:collapse;width:100%;margin:8px 0;font-size:14px}
+#compareView .cv-doc th{background:#FFF3CD;border:1px solid #bbb;padding:6px}
+#compareView .cv-doc td{border:1px solid #bbb;padding:6px;vertical-align:top}
+#compareView .cv-doc img{max-width:100%}
+#qnavToggle{margin-left:auto;font-size:14px;padding:6px 10px;border-radius:20px;box-shadow:0 4px 12px rgba(0,0,0,.35)}
+#qnavPanel{position:absolute;right:8px;top:calc(100% + 4px);display:none;background:#fff;border:2px solid #4f8cff;border-radius:10px;max-height:60vh;overflow-y:auto;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.35);width:170px;z-index:50}
+#qnavPanel .qnav-title{font-size:12px;color:#333;font-weight:700;text-align:center;margin-bottom:4px}
+#qnavGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;text-align:center}
+#qnavGrid button{font-size:12px;padding:3px 0;width:100%}
+#qnavGrid button.on{background:#4f8cff;border-color:#4f8cff;color:#fff}
+#qnavGrid button.wrong{background:#e11d48;border-color:#e11d48;color:#fff}
+/* ═══════ 全螢幕：題號面板浮動顯示 ═══════ */
+#qnavPanel.fs-panel{
+  position:fixed !important;
+  top:66px !important;
+  left:12px !important;
+  right:auto !important;
+  width:200px !important;
+  max-height:70vh !important;
+  z-index:9999 !important;
+}
+#exam{flex:1;display:none;flex-direction:column;min-height:0;background:#14151b}
+#examScroll{flex:1;overflow-y:auto}
+#examBody{padding:28px 40px}
+.exam-radio{display:block;margin:8px 0;cursor:pointer;font-size:16px;line-height:1.8}
+.exam-radio input{margin-right:8px;accent-color:#4f8cff}
+.exam-head{background:#1e2330;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:10px 0 16px;color:#cfe1ff;font-size:14px}
+.exam-wrong{background:#ffe5e5;border:1px solid #e11d48;border-radius:8px;padding:10px;margin:10px 0;color:#8a0f22;font-size:15px}
+/* ═══════ 平板（≥1024px）單欄主題 ═══════ */
+@media (min-width:1024px){
+  #docSide{display:none !important}
+  #doc{flex:1;min-width:0;max-width:1000px}
+}
+/* ═══════ 題目/選項：不可編輯、A~D 分行、可螢光筆 ═══════ */
+#doc h2[contenteditable="false"],
+.libq-body h2[contenteditable="false"],
+.win-body h2[contenteditable="false"],
+#cmpRightR h2[contenteditable="false"]{
+  user-select:text;
+  cursor:text;
+}
+.options.exam-style,
+.libq-body .options.exam-style,
+.win-body .options.exam-style,
+#compareView .options.exam-style{
+  user-select:text;
+  cursor:text;
+}
+.options.exam-style .exam-opt{
+  display:block;
+  margin:6px 0;
+  line-height:1.8;
+  font-size:16px;
+  user-select:text;
+}
+.options.exam-style .exam-opt.is-ans{
+  background:#fff3cd;
+  border-radius:4px;
+  font-weight:700;
+}
+/* ═══════ 手機（<768px）觸控優化 ═══════ */
+@media (max-width:767px){
+  html{font-size:15px}
+  header{padding:6px 8px}
+  header h1{font-size:15px}
+  header button{font-size:13px;padding:8px 12px;border-radius:10px}
+  .tool{font-size:13px;padding:6px 10px;border-radius:8px}
+  #viewTop,#libTools{flex-wrap:wrap;gap:6px;padding:6px 8px}
+  #viewTop button,#viewTop .tool,#libTools button,#libTools .tool{font-size:13px;padding:6px 10px}
+  #doc{font-size:18px;line-height:1.9}
+  #doc p,#doc .options{font-size:17px}
+  #doc h2{font-size:18px}
+  #doc .answer{font-size:17px}
+  #doc .solution,#doc .know,#doc .sim{font-size:16px;padding:12px}
+  #doc table{font-size:14px}
+  #doc td,#doc th{font-size:14px;padding:6px}
+  #qnavToggle{font-size:16px;padding:8px 14px;border-radius:24px}
+  #qnavPanel{width:200px}
+  #qnavGrid{grid-template-columns:repeat(6,1fr)}
+  #qnavGrid button{font-size:15px;padding:8px 0}
+  input[type=color]{width:32px;height:28px}
+  .hl-btn{width:24px;height:22px;border-radius:6px}
+  .saveQ{font-size:12px;padding:4px 8px}
+  .img-tools button{font-size:13px;padding:4px 10px}
+  #floatFs{position:fixed;right:12px;bottom:16px;z-index:998;width:46px;height:46px;border-radius:50%;background:rgba(79,140,255,.9);color:#fff;font-size:20px;border:none;box-shadow:0 4px 12px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+  #toast{font-size:14px;padding:10px 14px}
+/* ═══════ 手機版全螢幕閱讀 ═══════ */
+body.fs-mode header{display:none !important}
+body.fs-mode #viewTop,body.fs-mode #libTools{display:none !important}
+body.fs-mode #docWrap,body.fs-mode #libScroll{height:100vh !important}
+#fsExit{position:fixed;right:10px;bottom:14px;z-index:9999;background:rgba(31,41,55,.82);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:10px 16px;font-size:14px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+}
+/* ═══════ 手機/平板：圖片觸控優化 ═══════ */
+.movable-img.selected{
+  touch-action:none;
+  -webkit-user-select:none;
+  user-select:none;
+}
+.img-handle,.img-rotate{
+  touch-action:manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+}
+.img-tools{
+  z-index:1001 !important;
+  touch-action:manipulation;
+  -webkit-user-select:none;
+  user-select:none;
+}
+.img-tools button{
+  min-width:46px;
+  min-height:42px;
+  font-size:15px !important;
+}
+/* ═══════ 電腦/平板：隱藏全螢幕相關按鈕（只留手機用） ═══════ */
+@media (min-width:768px){
+  #floatFs{display:none !important}
+  #fsQnavBtn{display:none !important}
+  #fsExit{display:none !important}
+  #fsBtnView,#fsBtnLib{display:none !important}
+}
+
+/* ═══════ 手機版專屬（打包時自動加入） ═══════ */
+@media (max-width:767px){
+  #docSide{display:none !important}
+  #viewTop,#libTools{padding:6px 8px;gap:6px}
+  #viewTop button,#viewTop .tool,#libTools button,#libTools .tool{font-size:13px !important;padding:6px 10px !important;border-radius:8px !important}
+  .hl-btn{width:24px !important;height:22px !important}
+  #doc{font-size:18px;line-height:1.9 !important}
+  #doc h2{font-size:18px !important}
+  .saveQ{font-size:12px !important;padding:4px 8px !important}
+  #qnavPanel{width:200px !important}
+  #qnavGrid{grid-template-columns:repeat(6,1fr) !important}
+  #toast{font-size:14px !important}
+}
+</style>
+</head>
+<body>
+<header>
+  <span>📚</span><h1>放射師國考神器</h1>
+  <button id="btnHome" class="red">📖 詳解閱讀</button>
+  <button id="btnLib" class="green">⭐ 我的試題庫</button>
+  <button id="btnExam" class="purple">📝 考試區</button>
+  
+  <button id="btnBackup" class="tool">💾 匯出備份</button>
+  <button id="btnRestore" class="tool">📥 匯入備份</button>
+  <button id="btnCompare" style="display:none" class="tool">⚖️ 筆記/詳解對照</button>
+  <button id="btnPDF" style="display:none" class="primary">📄 輸出 PDF</button>
+  <span id="crumb"></span>
+</header>
+<div id="home">
+  <h2 id="homeTitle">請選擇科目</h2>
+  <div class="sub" id="homeSub">點科目 → 選年份 → 開始閱讀與標記</div>
+  <div class="cards" id="cards"></div>
+  <button id="navBackupActions" class="tool" style="display:block;margin:18px auto 0;font-size:15px;padding:10px 0;width:260px;text-align:center;font-weight:700;background:#0e9f6e;border-color:#0e9f6e;color:#fff;border-radius:10px;box-shadow:0 4px 12px rgba(14,159,110,.35)">💾 備份說明</button>
+  <button id="btnHelp" class="tool" style="display:block;margin:10px auto 0;font-size:15px;padding:10px 0;width:260px;text-align:center;font-weight:700;background:#4f8cff;border-color:#4f8cff;color:#fff;border-radius:10px;box-shadow:0 4px 12px rgba(79,140,255,.35)">📖 功能介紹</button>
+  <div id="socialLinks" style="display:flex;justify-content:center;align-items:center;gap:16px;margin-top:12px">
+    <a href="https://www.youtube.com/channel/UCht6WpsUKjZOfIjfhnbOz2w" target="_blank" rel="noopener"
+       style="display:block;width:72px;height:72px;border-radius:16px;background:#cc0000;box-shadow:0 4px 12px rgba(0,0,0,.4);transition:transform .15s">
+       <svg width="72" height="72" viewBox="0 0 24 24" fill="#fff" style="display:block">
+         <g transform="translate(3,3) scale(0.75)">
+           <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/>
+         </g>
+       </svg>
+    </a>
+    <a href="https://www.instagram.com/dy_handmake/" target="_blank" rel="noopener"
+       style="display:block;width:72px;height:72px;border-radius:16px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);box-shadow:0 4px 12px rgba(0,0,0,.4);transition:transform .15s">
+       <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" style="display:block">
+         <g transform="translate(1.2,1.2) scale(0.9)">
+           <rect x="2" y="2" width="20" height="20" rx="5"/>
+           <circle cx="12" cy="12" r="5"/>
+           <circle cx="17.5" cy="6.5" r="1.2" fill="#fff" stroke="none"/>
+         </g>
+       </svg>
+    </a>
+  </div>
+  <div class="rounds" id="rounds" style="display:none"></div>
+</div>
+<div id="view">
+  <div id="viewTop">
+    <button class="tool" id="fsBtnView" title="全螢幕閱讀">⛶</button>
+    <button class="tool" id="btnBackRounds" title="回同科目選其他年份">← 上頁</button>
+    <button class="tool" id="btnEdit">✏️ 編輯文字</button>
+    <button class="tool" id="btnUndo" title="復原筆記">↶ 復原</button>
+    <button class="tool" id="btnRedo" title="重做筆記">↷ 重做</button>
+    <button class="tool fmt" id="btnBold" title="粗體">B</button>
+    <button class="tool fmt" id="btnItalic" title="斜體">I</button>
+    <button class="tool fmt" id="btnSup" title="上標">x²</button>
+    <button class="tool fmt" id="btnSub" title="下標">x₂</button>
+    <span class="hl-btn" data-c="#e11d48" style="background:#e11d48" title="紅"></span>
+    <span class="hl-btn" data-c="#f97316" style="background:#f97316" title="橘"></span>
+    <span class="hl-btn" data-c="#22c55e" style="background:#22c55e" title="綠"></span>
+    <span class="hl-btn" data-c="#2563eb" style="background:#2563eb" title="藍"></span>
+    <span class="hl-btn" data-c="#111827" style="background:#111827" title="黑"></span>
+    <input type="color" id="txtColor" value="#e11d48" title="自訂文字顏色">
+    <button class="tool" id="btnHlToggle">🖊️ 螢光筆</button>
+    <span class="hl-btn" data-c="#ffe58a" style="background:#ffe58a"></span>
+    <span class="hl-btn" data-c="#a5d3ff" style="background:#a5d3ff"></span>
+    <span class="hl-btn" data-c="#a7e0a7" style="background:#a7e0a7"></span>
+    <span class="hl-btn" data-c="#ff9d9d" style="background:#ff9d9d"></span>
+    <span class="hl-btn" data-c="#ffb3d1" style="background:#ffb3d1"></span>
+    <button class="tool" id="btnEraser">🧽 橡皮擦</button>
+    <button class="tool" id="btnImage">🖼️ 插入圖片</button>
+    <button class="tool" id="btnZoomOut" title="縮小文字">A-</button>
+    <button class="tool" id="btnZoomIn" title="放大文字">A+</button>
+    <button class="tool" id="btnViewOut" title="縮小畫面">🔍-</button>
+    <button class="tool" id="btnViewIn" title="放大畫面">🔍+</button>
+    <button class="tool" id="btnSubmitExam" style="display:none;background:#e11d48;border-color:#e11d48;color:#fff">📤 送出答案</button>
+    <button class="tool" id="qnavToggle" title="題號快速跳轉">🔢 題號</button>
+    <div id="qnavPanel">
+      <div class="qnav-title">快速跳題</div>
+      <div id="qnavGrid"></div>
+    </div>
+  </div>
+  <div id="docWrap"><div id="docSide"></div><div id="doc"></div></div>
+</div>
+<div id="lib">
+  <div id="libTools" style="display:none">
+    <button class="tool" id="fsBtnLib" title="全螢幕閱讀">⛶</button>
+    <button class="tool" id="btnBackRoundsLib" title="回同科目選其他年份">← 上頁</button>
+    <button class="tool" id="btnEditLib">✏️ 編輯</button>
+    <button class="tool" id="btnBoldLib">B</button>
+    <button class="tool" id="btnItalicLib">I</button>
+    <button class="tool" id="btnSupLib">x²</button>
+    <button class="tool" id="btnSubLib">x₂</button>
+    <span class="hl-btn" data-fc="#e11d48" style="background:#e11d48"></span>
+    <span class="hl-btn" data-fc="#f97316" style="background:#f97316"></span>
+    <span class="hl-btn" data-fc="#22c55e" style="background:#22c55e"></span>
+    <span class="hl-btn" data-fc="#2563eb" style="background:#2563eb"></span>
+    <span class="hl-btn" data-fc="#111827" style="background:#111827"></span>
+    <input type="color" id="txtColorLib" value="#e11d48">
+    <button class="tool" id="btnHlToggleLib">🖊️ 螢光筆</button>
+    <span class="hl-btn" data-c="#ffe58a" style="background:#ffe58a"></span>
+    <span class="hl-btn" data-c="#a5d3ff" style="background:#a5d3ff"></span>
+    <span class="hl-btn" data-c="#a7e0a7" style="background:#a7e0a7"></span>
+    <span class="hl-btn" data-c="#ff9d9d" style="background:#ff9d9d"></span>
+    <span class="hl-btn" data-c="#ffb3d1" style="background:#ffb3d1"></span>
+    <button class="tool" id="btnEraserLib">🧽 橡皮擦</button>
+    <button class="tool" id="btnImageLib">🖼️ 插入圖片</button>
+    <button class="tool" id="btnZoomOutLib">A-</button>
+    <button class="tool" id="btnZoomInLib">A+</button>
+    <button class="tool" id="btnViewOutLib">🔍-</button>
+    <button class="tool" id="btnViewInLib">🔍+</button>
+  </div>
+  <div id="libScroll"><div id="libBody"></div></div>
+</div>
+<div id="exam">
+  <div id="examScroll"><div id="examBody"></div></div>
+</div>
+<input type="file" id="imgInput" accept="image/*" hidden>
+<input type="file" id="imgInputLib" accept="image/*" hidden>
+<input type="file" id="imgInputCmp" accept="image/*" hidden>
+<input type="file" id="imgInputWin" accept="image/*" hidden>
+<div id="toast"></div>
+<button id="fsQnavBtn" title="全螢幕題號" style="display:none;position:fixed;left:12px;bottom:16px;z-index:9997;width:46px;height:46px;border-radius:50%;background:rgba(79,140,255,.9);color:#fff;font-size:20px;border:none;box-shadow:0 4px 12px rgba(0,0,0,.4)">🔢</button>
+<button id="floatFs" title="全title="全螢幕閱讀">⛶</button>
+<!-- ═══════ 📱 手機版讀取進度條（只在手機版顯示） ═══════ -->
+<div id="bootLoader" style="display:none;position:fixed;inset:0;background:#14151b;z-index:99998;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff">
+  <div style="font-size:30px">📚</div>
+  <div id="bootText" style="font-size:15px;color:#9aa0b0">讀取中…</div>
+  <div style="width:260px;height:9px;background:#262a36;border-radius:99px;overflow:hidden;box-shadow:0 0 0 1px #2b2d38">
+    <div id="bootBar" style="width:0%;height:100%;background:linear-gradient(90deg,#4f8cff,#6ea8ff);border-radius:99px;transition:width .25s ease"></div>
+  </div>
+  <div id="bootPct" style="font-size:12px;color:#6b7280">0%</div>
+</div>
+<!-- ═══════ 🔑 金鑰鎖（手機版/瀏覽器：只用 localStorage；電腦版：才查後端） ═══════ -->
+<script src="index.js"></script><script>
+/* ═══════ 🔑 金鑰鎖（支援多組金鑰） ═══════ */
+const ACCESS_CODES=[
+  'KEY-0001',
+  'KEY-0002',
+  'KEY-0003',
+  'KEY-0004',
+  'KEY-0005',
+  'KEY-0006',
+  'KEY-0007',
+  'KEY-0008',
+  'KEY-0009',
+  'KEY-0010'
+];
+(function(){
+  /* 判斷是否「有後端」（http://127.0.0.1 等） */
+  var hasBackend=false;
+  try{
+    if(location.protocol==='http:'||location.protocol==='https:'){
+      var x=new XMLHttpRequest();
+      x.open('GET','/api/is_unlocked',false);
+      x.send();
+      if(x.status===200){
+        var j=JSON.parse(x.responseText);
+        if(j&&j.ok)return;
+        hasBackend=true;
+      }
+    }
+  }catch(e){}
+  /* 手機版/瀏覽器（file://）：只讀 localStorage */
+  if(!hasBackend&&localStorage.getItem('unlocked')==='1')return;
+  var div=document.createElement('div');
+  div.id='keyLock';
+  div.style.cssText='position:fixed;inset:0;background:#14151b;z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff';
+  div.innerHTML=
+    '<div style="font-size:26px">🔑</div>'+
+    '<div style="font-size:18px;font-weight:700">請輸入金鑰</div>'+
+    '<div style="font-size:13px;color:#9aa0b0">裝置首次使用需輸入（換裝置、清除瀏覽資料後需再輸入）</div>'+
+    '<input id="keyInput" type="password" placeholder="輸入金鑰" style="padding:10px 14px;border-radius:8px;border:1px solid #4f8cff;font-size:16px;text-align:center;width:220px;background:#1a1b22;color:#fff">'+
+    '<button id="keyBtn" style="padding:10px 30px;border-radius:8px;border:none;background:#4f8cff;color:#fff;font-size:15px;font-weight:700;cursor:pointer">解鎖</button>'+
+    '<div id="keyMsg" style="font-size:12px;color:#e11d48;min-height:16px"></div>';
+  document.body.appendChild(div);
+  function tryUnlock(){
+    var input=document.getElementById('keyInput').value;
+    if(ACCESS_CODES.indexOf(input)>=0){
+      localStorage.setItem('unlocked','1');
+      try{sessionStorage.setItem('justUnlocked','1');}catch(e){}
+      if(hasBackend){
+        try{
+          var xhr2=new XMLHttpRequest();
+          xhr2.open('GET','/api/set_unlocked',false);
+          xhr2.send();
+          var xhr3=new XMLHttpRequest();
+          xhr3.open('POST','/api/unlock_done',false);
+          xhr3.setRequestHeader('Content-Type','application/json');
+          xhr3.send('{}');
+        }catch(e2){}
+      }
+      div.remove();
+      /* 解鎖後重新載入頁面，確保卡片/版面正常 */
+      location.reload();
+    }else{
+      document.getElementById('keyMsg').textContent='❌ 金鑰錯誤';
+    }
+  }
+  document.getElementById('keyBtn').onclick=tryUnlock;
+  document.getElementById('keyInput').addEventListener('keydown',function(e){
+    if(e.key==='Enter')tryUnlock();
+  });
+  document.getElementById('keyInput').focus();
+})();
+</script>
+<script>
+'use strict';
+
+/* ═══════ 手機版：IndexedDB 儲存層 ═══════ */
+const DB_NAME='radiographer_exam_helper';
+const DB_VER=1;
+let _db=null;
+function idbOpen(){
+  return new Promise(function(resolve,reject){
+    if(_db){resolve(_db);return;}
+    const req=indexedDB.open(DB_NAME,DB_VER);
+    req.onupgradeneeded=function(e){
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('kv'))db.createObjectStore('kv');
+    };
+    req.onsuccess=function(e){_db=e.target.result;resolve(_db);};
+    req.onerror=function(e){reject(e.target.error||new Error('IndexedDB 開啟失敗'));};
+  });
+}
+async function idbGet(key){
+  const db=await idbOpen();
+  return new Promise(function(resolve,reject){
+    const r=db.transaction('kv','readonly').objectStore('kv').get(key);
+    r.onsuccess=function(){resolve(r.result);};
+    r.onerror=function(){reject(r.error);};
+  });
+}
+async function idbSet(key,val){
+  const db=await idbOpen();
+  return new Promise(function(resolve,reject){
+    const t=db.transaction('kv','readwrite');
+    t.objectStore('kv').put(val,key);
+    t.oncomplete=function(){resolve(true);};
+    t.onerror=function(){reject(t.error);};
+  });
+}
+async function idbDel(key){
+  const db=await idbOpen();
+  return new Promise(function(resolve,reject){
+    const t=db.transaction('kv','readwrite');
+    t.objectStore('kv').delete(key);
+    t.oncomplete=function(){resolve(true);};
+    t.onerror=function(){reject(t.error);};
+  });
+}
+async function idbKeys(prefix){
+  const db=await idbOpen();
+  return new Promise(function(resolve,reject){
+    const r=db.transaction('kv','readonly').objectStore('kv').getAllKeys();
+    r.onsuccess=function(){resolve((r.result||[]).filter(function(k){return String(k).indexOf(prefix)===0;}));};
+    r.onerror=function(){reject(r.error);};
+  });
+}
+async function scanExamsFromIdb(){
+  const ks=await idbKeys('exam:');
+  const result={subjects:[]};
+  for(const k of ks){
+    const rel=k.slice(5);const parts=rel.split('/');
+    if(parts.length<3)continue;
+    const sub=parts[0],lab=parts[1],name=parts.slice(2).join('/');
+    let s=result.subjects.find(function(x){return x.name===sub;});
+    if(!s){s={name:sub,labels:[]};result.subjects.push(s);}
+    let l=s.labels.find(function(x){return x.label===lab;});
+    if(!l){l={label:lab,attempts:[]};s.labels.push(l);}
+    const data=await idbGet(k)||{};
+    l.attempts.push({name:name,time:data.time||'',score:data.score,total:data.total||0,
+                     correct:data.correct||0,wrong_count:(data.wrong||[]).length,
+                     draft:data.draft||false,file:data.file||''});
+  }
+  result.subjects.forEach(function(s){s.labels.sort(function(a,b){return a.label.localeCompare(b.label);});});
+  return result;
+}
+/* ═══════ 手機版前端 API（單檔/多檔都支援） ═══════ */
+async function api(path,body){
+  if(path==='/api/index'){
+    if(window.MOBILE_INDEX)return {ok:true,data:window.MOBILE_INDEX};
+    if(window.MOBILE_DATA&&window.MOBILE_DATA.index)return {ok:true,data:window.MOBILE_DATA.index};
+    return {ok:false,msg:'資料未載入(index.js)'};
+  }
+  if(path==='/api/round'){
+    const f=await loadRound(body.file);
+    return f?{ok:true,html:f}:{ok:false,msg:'找不到檔案'};
+  }
+  if(path==='/api/question'){
+    const html=await loadRound(body.file);
+    if(!html)return {ok:false,msg:'找不到題目'};
+    const num=parseInt(body.num)||0;
+    const m=html.match(new RegExp('<h2[^>]*>\\s*第\\s*'+num+'\\s*[題题]','i'));
+    if(!m)return {ok:false,msg:'找不到題目'};
+    let frag=html.slice(m.index);
+    const rest=frag.slice(6);
+    const nm=rest.match(/<h2[^>]*>\s*第\s*\d{1,3}\s*[題题]/i);
+    if(nm)frag=frag.slice(0,nm.index+6);
+    return {ok:true,html:frag};
+  }
+  if(path==='/api/notes'){
+    const v=await idbGet('note:'+body.key);
+    return {ok:true,data:v||{}};
+  }
+  if(path==='/api/save_notes'){
+    await idbSet('note:'+body.key,body.data||{});
+    return {ok:true};
+  }
+  if(path==='/api/delete_note'){
+    await idbDel('note:'+body.key);
+    return {ok:true};
+  }
+  if(path==='/api/list_notes'){
+    const ks=await idbKeys('note:');
+    return {ok:true,files:ks.map(function(k){return k.slice(5);})};
+  }
+  if(path==='/api/save_image'){
+    return {ok:true};
+  }
+  if(path==='/api/library'){
+    const v=await idbGet('lib:試題庫');
+    return {ok:true,data:v||{subjects:[]}};
+  }
+  if(path==='/api/save_library'){
+    await idbSet('lib:試題庫',body.data||{subjects:[]});
+    return {ok:true};
+  }
+  if(path==='/api/save_paper'){
+    await idbSet('paper:'+body.key,body.html||'');
+    return {ok:true};
+  }
+  if(path==='/api/list_papers'){
+    const ks=await idbKeys('paper:');
+    return {ok:true,files:ks.map(function(k){return k.slice(6);})};
+  }
+  if(path==='/api/delete_paper'){
+    await idbDel('paper:'+body.name);
+    return {ok:true};
+  }
+  if(path==='/api/paper'){
+    const v=await idbGet('paper:'+body.name);
+    return v?{ok:true,html:v}:{ok:false,msg:'找不到'};
+  }
+  if(path==='/api/exam_save'){
+    await idbSet('exam:'+body.key,body.data||{});
+    return {ok:true};
+  }
+  if(path==='/api/exam_load'){
+    const v=await idbGet('exam:'+body.key);
+    return v?{ok:true,data:v}:{ok:false,msg:'找不到'};
+  }
+  if(path==='/api/exam_delete'){
+    await idbDel('exam:'+body.key);
+    return {ok:true};
+  }
+  if(path==='/api/exams'){
+    return {ok:true,data:await scanExamsFromIdb()};
+  }
+  if(path==='/api/export_backup'){
+    const ks=await idbKeys('');
+    const data={};
+    for(const k of ks){data[k]=await idbGet(k);}
+    return {ok:true,data:data};
+  }
+  if(path==='/api/import_backup'){
+    const inp=body.data||{};
+    let count=0;
+    for(const k in inp){if(typeof k==='string'){await idbSet(k,inp[k]);count++;}}
+    return {ok:true,count:count};
+  }
+  return {ok:false,msg:'unknown(手機版)'};
+}
+/* ═══════ 分批載入：檔案快取 ═══════ */
+const _roundCache={};
+async function loadRound(file){
+  if(_roundCache[file]!==undefined)return _roundCache[file];
+  if(window.MOBILE_DATA&&window.MOBILE_DATA.files&&window.MOBILE_DATA.files[file]!==undefined){
+    _roundCache[file]=window.MOBILE_DATA.files[file];
+    return _roundCache[file];
+  }
+  const sub=String(file).split('/')[0];
+  const name=(window.MOBILE_SUBS&&window.MOBILE_SUBS[sub])||('sub_'+encodeURIComponent(sub)+'.js');
+  try{
+    const r=await fetch(name,{cache:'no-store'});
+    if(!r.ok)return null;
+    const txt=await r.text();
+    const m=txt.match(/window\.MOBILE_SUB\s*=\s*(\{[\s\S]*\});?\s*$/);
+    if(!m)return null;
+    const data=JSON.parse(m[1]);
+    if(data&&data.files){
+      for(const k in data.files){_roundCache[k]=data.files[k];}
+    }
+    return _roundCache[file]||null;
+  }catch(e){return null;}
+}
+
+const $=id=>document.getElementById(id);
+const home=$('home'),view=$('view'),lib=$('lib');
+const docEl=$('doc'),crumb=$('crumb'),libBody=$('libBody'),docWrap=$('docWrap');
+const exam=$('exam'),examBody=$('examBody');
+let DB={subjects:[]},current=null,notes={};
+let editMode=false,hlDirect=false,eraserMode=false;
+let editModeLib=false,hlDirectLib=false,eraserModeLib=false;
+let cmpHlDirect=false,cmpEraser=false;
+let hlColor='#ffe58a',docFont=17,viewZoom=1,toastTimer;
+let selImg=null,selHandles=[],rotHandle=null,imgToolbar=null;
+let labelMap={},libViewCtx=null,libDirty=new Map(),autoTimer=null,autoTimerLib=null,libDocFont=15,winCnt=0;
+let cmpSrc=null,winRightTarget=null;
+let activeLibCard=null;
+let noteUndo=[],noteRedo=[],noteSession='',noteActionLock=false,noteTextTimer=null;
+let simModalTarget=null;
+let examCtx=null,examWrong=new Set(),examDraftTimer=null,examSyncTimer=null;
+let statsData=null,statsResizeTimer=null;
+function hideQnav(){const t=$('qnavToggle');if(t)t.style.display='none';const p=$('qnavPanel');if(p)p.style.display='none';}
+function showQnav(){const t=$('qnavToggle');if(t)t.style.display='';}
+function showToast(m){$('toast').textContent=m;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2200);}
+/* ═══════ 手機版全螢幕閱讀 ═══════ */
+function fsToggle(){
+  document.body.classList.toggle('fs-mode');
+  const fs=document.body.classList.contains('fs-mode');
+  const qb=document.getElementById('fsQnavBtn');
+  if(qb)qb.style.display=fs?'flex':'none';
+  /* 題號面板移出/移回 #viewTop，避免全螢幕時被隱藏 */
+  const pane=document.getElementById('qnavPanel');
+  const top=document.getElementById('viewTop');
+  if(pane&&top){
+    if(fs){
+      if(pane.parentElement!==document.body)document.body.appendChild(pane);
+      pane.classList.add('fs-panel');
+    }else{
+      if(pane.parentElement!==top)top.appendChild(pane);
+      pane.classList.remove('fs-panel');
+      pane.style.display='none';
+    }
+  }
+  let b=document.getElementById('fsExit');
+  if(fs){
+    if(!b){
+      b=document.createElement('button');
+      b.id='fsExit';
+      b.textContent='⛶ 退出全螢幕';
+      b.onclick=fsToggle;
+      document.body.appendChild(b);
+    }
+  }else{
+    if(b)b.remove();
+  }
+}
+$('fsBtnView').onclick=fsToggle;
+$('fsBtnLib').onclick=fsToggle;
+const fq=document.getElementById('fsQnavBtn');
+if(fq){
+  fq.onclick=function(e){
+    e.stopPropagation();
+    const pane=document.getElementById('qnavPanel');
+    if(pane){
+      pane.style.display=(pane.style.display==='block'||pane.style.display==='')?'none':'block';
+    }
+  };
+}
+const ff=document.getElementById('floatFs');
+if(ff)ff.onclick=fsToggle;
+/* ═══════ 手機版讀取進度條 ═══════ */
+let bootTimer=null;
+function bootShow(){
+  const l=document.getElementById('bootLoader');
+  if(!l)return;
+  l.style.display='flex';
+  setBootPct(0,'讀取中…');
+}
+function setBootPct(p,txt){
+  const b=document.getElementById('bootBar');
+  const t=document.getElementById('bootText');
+  const pct=document.getElementById('bootPct');
+  if(b)b.style.width=p+'%';
+  if(t&&txt)t.textContent=txt;
+  if(pct)pct.textContent=Math.round(p)+'%';
+}
+function bootSimulate(){
+  if(bootTimer)clearInterval(bootTimer);
+  let p=0;
+  bootTimer=setInterval(function(){
+    p=Math.min(90,p+Math.random()*2.5+0.5);
+    setBootPct(p,'讀取中…');
+  },120);
+}
+function bootDone(){
+  if(bootTimer)clearInterval(bootTimer);
+  setBootPct(100,'完成');
+  setTimeout(function(){
+    const l=document.getElementById('bootLoader');
+    if(l)l.remove();
+  },300);
+}
+/* api() 已由手機版 IndexedDB 層提供 */
+function isLibActive(){return lib.style.display!=='none'&&libViewCtx;}
+function resetNoteHistory(){noteUndo=[];noteRedo=[];noteSession=current?(current.subject+'/'+current.label):'';}
+function noteSnapNow(){
+  if(!current)return;
+  const key=current.subject+'/'+current.label;
+  if(key!==noteSession)resetNoteHistory();
+  const html=docEl.innerHTML;
+  if(!noteUndo.length||noteUndo[noteUndo.length-1]!==html){
+    noteUndo.push(html);
+    if(noteUndo.length>30)noteUndo.shift();
+    noteRedo=[];
+  }
+}
+
+function noteRestore(html){
+  docEl.innerHTML=html;
+  injectSaveButtons();
+  enhanceSimilarLinks();
+  buildQnav();
+  buildSideNav();
+  cleanupEmptyTableParts(docEl);
+  setHlMode(false,true);
+  setEraser(false,true);
+  clearImgUI();
+  scheduleAutoSave();
+}
+function stopNoteMemory(){noteUndo=[];noteRedo=[];noteSession='';}
+function stopEditState(){
+  editMode=false;
+  docEl.contentEditable='false';
+  $('btnEdit').classList.remove('on');
+  editModeLib=false;
+  libBody.querySelectorAll('.libq-body').forEach(b=>b.contentEditable='false');
+  $('btnEditLib').classList.remove('on');
+  setHlMode(false,true);
+  setEraser(false,true);
+  setHlModeLib(false,true);
+  setEraserLib(false,true);
+}
+function isEmptyCell(el){
+  if(!el) return true;
+  const txt=(el.textContent||'').replace(/\s+/g,'');
+  if(txt!=='') return false;
+  if(el.querySelector('img,canvas,svg,input,select,textarea,hr,picture,video')) return false;
+  if(el.querySelectorAll('br').length>1) return false;
+  return true;
+}
+function cleanupEmptyTableParts(root){
+  const scope=root||docEl;
+  scope.querySelectorAll('table').forEach(t=>{
+    let changed=true;
+    while(changed){
+      changed=false;
+      Array.from(t.querySelectorAll('tr')).forEach(tr=>{
+        const cells=Array.from(tr.querySelectorAll('td,th'));
+        if(!cells.length){
+          tr.remove();
+          changed=true;
+          return;
+        }
+        if(cells.every(isEmptyCell)){
+          tr.remove();
+          changed=true;
+        }
+      });
+      const rows=Array.from(t.querySelectorAll('tr'));
+      const maxCols=rows.reduce((mx,tr)=>Math.max(mx,tr.children.length),0);
+      for(let ci=0;ci<maxCols;ci++){
+        const colCells=[];
+        rows.forEach(tr=>{
+          const c=Array.from(tr.children).filter(el=>el.matches('td,th'));
+          if(c[ci]) colCells.push(c[ci]);
+        });
+        if(colCells.length&&colCells.every(isEmptyCell)){
+          colCells.forEach(c=>c.remove());
+          changed=true;
+        }
+      }
+    }
+    t.querySelectorAll('tbody').forEach(tb=>{
+      if(!tb.querySelector('tr')) tb.remove();
+    });
+    if(!t.querySelector('tr')) t.remove();
+  });
+}
+async function loadIndex(){
+  const r=await api('/api/index');
+  if(!r.ok){showToast('讀取資料失敗');return;}
+  DB=r.data;
+  buildLabelMap();
+  renderHome();
+}
+function renderHome(){
+  $('cards').innerHTML='';
+  DB.subjects.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='scard';
+    d.innerHTML='<div class="icon">📘</div><div class="name">'+s.name+'</div><div class="cnt">'+s.rounds.length+' 回</div>';
+    d.onclick=()=>goBackToRounds(s);
+    $('cards').appendChild(d);
+  });
+}
+function showRounds(s){
+  $('homeTitle').textContent=s.name;
+  $('homeSub').textContent='選擇年份（點任一回開始閱讀）';
+  $('cards').style.display='none';
+  $('btnHelp').style.display='none';
+  $('navBackupActions').style.display='none';
+  $('socialLinks').style.display='none';
+  const old=document.getElementById('btnBackCards');
+  if(old)old.remove();
+  const back=document.createElement('button');
+  back.id='btnBackCards';
+  back.className='tool';
+  back.textContent='← 回科目';
+  back.onclick=goHome;
+  back.style.cssText='margin-bottom:14px;font-size:14px;padding:8px 16px;border-radius:8px';
+  $('home').insertBefore(back,$('homeTitle'));
+  const rw=$('rounds');
+  rw.style.display='grid';
+  rw.innerHTML='';
+  s.rounds.forEach(rd=>{
+    const b=document.createElement('div');
+    b.className='rbtn';
+    b.textContent=rd.label;
+    b.onclick=()=>openRound(s.name,rd);
+    rw.appendChild(b);
+  });
+}
+function goBackToRounds(s){
+  stopEditState();
+  stopNoteMemory();
+  clearImgUI();
+  hideViewButtons();
+  libViewCtx=null;
+  activeLibCard=null;
+  home.style.display='block';
+  view.style.display='none';
+  lib.style.display='none';
+  exam.style.display='none';
+  hideQnav();
+  showRounds(s);
+  crumb.textContent=s.name;
+}
+function hideViewButtons(){['btnCompare','btnPDF'].forEach(id=>$(id).style.display='none');}
+function showViewButtons(){['btnCompare','btnPDF'].forEach(id=>$(id).style.display='');}
+function goHome(){
+  stopEditState();
+  stopNoteMemory();
+  clearImgUI();
+  hideViewButtons();
+  libViewCtx=null;
+  activeLibCard=null;
+  home.style.display='block';
+  view.style.display='none';
+  lib.style.display='none';
+  exam.style.display='none';
+  hideQnav();
+  $('cards').style.display='grid';
+  $('rounds').style.display='none';
+  $('homeTitle').textContent='請選擇科目';
+  $('homeSub').textContent='點科目 → 選年份 → 開始閱讀與標記';
+  crumb.textContent='';
+  $('btnHelp').style.display='block';
+  $('navBackupActions').style.display='block';
+  $('socialLinks').style.display='flex';
+  const bc=document.getElementById('btnBackCards');
+  if(bc)bc.remove();
+}
+/* ═══════ 所有地方「題目+選項」轉成考題格式（A~D 分行、無圓點、不可改字、可螢光筆） ═══════ */
+function convertDocToExamStyle(root){
+  const scope=root||docEl;
+  scope.querySelectorAll('h2').forEach(function(h){
+    h.setAttribute('contenteditable','false');
+    h.style.userSelect='text';
+    let sib=h.nextSibling;
+    while(sib&&!(sib.nodeType===1&&sib.tagName==='H2')){
+      if(sib.nodeType===1&&sib.classList&&sib.classList.contains('options')){
+        const raw=sib.textContent||'';
+        const segs=raw.split(/(?=[A-D][.、])/).map(x=>x.trim()).filter(Boolean);
+        const wrap=document.createElement('div');
+        wrap.className='options exam-style';
+        wrap.setAttribute('contenteditable','false');
+        segs.forEach(function(seg){
+          const om=seg.match(/^([A-D])[.、]\s*(.+)$/);
+          if(om){
+            const opt=document.createElement('div');
+            opt.className='exam-opt';
+            opt.textContent=om[1]+'. '+om[2];
+            wrap.appendChild(opt);
+          }
+        });
+        sib.replaceWith(wrap);
+        break;
+      }
+      sib=sib.nextSibling;
+    }
+  });
+}
+/* ═══════ 清除多餘空白 span（含題目區 exam-opt） ═══════ */
+function cleanupEmptySpans(root){
+  const scope=root||docEl;
+  if(!scope)return;
+  /* ① 移除完全空的 span */
+  scope.querySelectorAll('span').forEach(function(s){
+    if(!s.textContent.trim()&&!s.querySelector('img,br'))s.remove();
+  });
+  /* ② 移除 span 前後多餘的空白文字節點 */
+  scope.querySelectorAll('span').forEach(function(s){
+    let n=s.previousSibling;
+    while(n&&n.nodeType===3&&!n.nodeValue.trim()){
+      n.parentNode.removeChild(n);
+      n=s.previousSibling;
+    }
+    n=s.nextSibling;
+    while(n&&n.nodeType===3&&!n.nodeValue.trim()){
+      n.parentNode.removeChild(n);
+      n=s.nextSibling;
+    }
+  });
+  /* ③ 合併相鄰、同字體大小的 span */
+  scope.querySelectorAll('span').forEach(function(s){
+    let n=s.nextSibling;
+    while(n&&n.nodeType===3&&!n.nodeValue.trim()){
+      n.remove();
+      n=s.nextSibling;
+    }
+    if(n&&n.nodeType===1&&n.tagName==='SPAN'&&n.style.fontSize===s.style.fontSize){
+      s.appendChild(document.createTextNode(n.textContent));
+      n.remove();
+    }
+  });
+  /* ④ 特別清理題目區（.exam-opt / .options.exam-style）內多餘空元素 */
+  scope.querySelectorAll('.exam-opt span,.exam-opt div,.options.exam-style span').forEach(function(el){
+    if(!el.textContent.trim()&&!el.querySelector('img,br'))el.remove();
+  });
+  /* ⑤ 清掉題目區內殘留的空白文字節點（跨選項被拆開時常見） */
+  scope.querySelectorAll('.exam-opt').forEach(function(opt){
+    [...opt.childNodes].forEach(function(n){
+      if(n.nodeType===3&&!n.nodeValue.trim())n.parentNode.removeChild(n);
+    });
+  });
+}
+/* ═══════ 精準改「選取範圍」文字大小（只改選到的部分，不整行、可連續、無空格） ═══════ */
+function fontSel(container,delta){
+  const sel=window.getSelection();
+  if(!sel||!sel.rangeCount||sel.isCollapsed)return null;
+  const range=sel.getRangeAt(0);
+  const inside=function(n){
+    if(!n)return false;
+    if(n.nodeType===3)n=n.parentElement;
+    return n&&container&&(container===n||container.contains(n));
+  };
+  if(!inside(range.startContainer)||!inside(range.endContainer))return null;
+
+  /* ① 確認有文字 */
+  const clone=range.cloneContents();
+  if(!(clone.textContent||'').trim())return null;
+
+  /* ② 取基準字體（選取起始處的父層） */
+  let base=17;
+  const sc=range.startContainer;
+  const pEl=sc&&sc.parentElement?sc.parentElement:container;
+  base=parseFloat(getComputedStyle(pEl).fontSize)||17;
+  const next=Math.max(10,Math.min(48,base+delta));
+
+  /* ③ 只抽出「選取範圍」的文字（未選到的前後完全不動） */
+  const extracted=range.extractContents();
+  const sp=document.createElement('span');
+  sp.style.fontSize=next+'px';
+  sp.appendChild(extracted);
+  range.insertNode(sp);
+
+  /* ④ 重新選取 → 可連續按 A+/A- */
+  sel.removeAllRanges();
+  try{
+    const r=document.createRange();
+    r.selectNodeContents(sp);
+    sel.addRange(r);
+  }catch(e){}
+
+  /* ⑤ 清掉可能的多餘空白 span */
+  try{cleanupEmptySpans(container);}catch(e){}
+
+  return {size:next};
+}
+function getCurrentQuestionNum(){
+  const scroll=docWrap.scrollTop;
+  let target=null;
+  docEl.querySelectorAll('h2').forEach(h=>{
+    const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(!m)return;
+    const pos=h.getBoundingClientRect().top+docWrap.scrollTop;
+    if(pos+80>=scroll){
+      if(target===null||pos<target._pos){
+        target=h;
+        target._pos=pos;
+      }
+    }
+  });
+  if(!target)return 0;
+  const m=target.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+  return m?parseInt(m[1]):0;
+}
+async function openRound(subject,rd,applySavedNotes=true){
+if(typeof bootShow==='function'&&(window.MOBILE_DATA||window.MOBILE_INDEX)){
+  bootShow();
+  bootSimulate();
+}
+  stopEditState();
+  examCtx=null;
+  examWrong.clear();
+  setExamTakeUI(false);
+  current={subject,label:rd.label,file:rd.file};
+  const r=await api('/api/round',{file:rd.file});
+  if(!r.ok){showToast('載入失敗');return;}
+  docEl.innerHTML=r.html;
+  convertDocToExamStyle(docEl);
+  if(applySavedNotes){
+    const n=await api('/api/notes',{key:subject+'/'+rd.label});
+    notes=n.data||{};
+  }else notes={};
+  injectSaveButtons();
+  applyNotes();
+  enhanceSimilarLinks();
+  buildQnav();
+  cleanupEmptyTableParts(docEl);
+  await syncLibToCheckboxes();
+  home.style.display='none';
+  view.style.display='flex';
+  lib.style.display='none';
+  exam.style.display='none';
+  crumb.textContent=subject+' ｜ '+rd.label;
+  showViewButtons();
+  resetNoteHistory();
+  noteSnapNow();
+  buildSideNav();
+  setHlMode(false,true);
+  setEraser(false,true);
+if(typeof bootDone==='function')bootDone();
+  docWrap.scrollTop=0;
+}
+function buildQnav(){
+  const nums=[];
+  docEl.querySelectorAll('h2').forEach(h=>{
+    const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(m) nums.push(parseInt(m[1]));
+  });
+  if(!nums.length){hideQnav();return;}
+  const grid=$('qnavGrid');
+  grid.innerHTML='';
+  nums.forEach(n=>{
+    const b=document.createElement('button');
+    b.className='tool';
+    b.textContent=n;
+    if(examWrong.has(n))b.classList.add('wrong');
+    b.onclick=function(){
+      const target=findQHeading(n);
+      if(target){
+        try{target.scrollIntoView({behavior:'smooth',block:'start'});}
+        catch(e){target.scrollIntoView();}
+      }
+      $('qnavPanel').style.display='none';
+    };
+    grid.appendChild(b);
+  });
+  showQnav();
+}
+function findQHeading(num){
+  const re=new RegExp('第\\s*'+num+'\\s*[題题]');
+  let found=null;
+  docEl.querySelectorAll('h2').forEach(h=>{
+    if(re.test(h.textContent))found=h;
+  });
+  return found;
+}
+function buildSideNav(){
+  const side=document.getElementById('docSide');
+  if(side)side.style.display='none';
+}
+window.addEventListener('resize',buildSideNav);
+$('qnavToggle').onclick=()=>{
+  $('qnavPanel').style.display=($('qnavPanel').style.display==='none'||!$('qnavPanel').style.display)?'block':'none';
+};
+document.addEventListener('click',function(e){
+  const p=$('qnavPanel');
+  if(p&&p.style.display==='block'&&!e.target.closest('#qnavToggle')&&!e.target.closest('#qnavPanel')){
+    p.style.display='none';
+  }
+});
+function injectSaveButtons(root){
+  if(current&&current.isExam&&!current.origLabel)return;
+  (root||docEl).querySelectorAll('h2').forEach(h2=>{
+    if(h2.querySelector('.saveQ'))return;
+    const m=h2.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(!m)return;
+    const num=parseInt(m[1]);
+    const lb=document.createElement('label');
+    lb.className='saveQ';
+    lb.innerHTML='<input type="checkbox" data-q="'+num+'"> 儲存試題';
+    h2.appendChild(lb);
+  });
+}
+function savedArr(){return Array.from(docEl.querySelectorAll('.saveQ input')).filter(cb=>cb.checked).map(cb=>parseInt(cb.dataset.q));}
+function syncSavedCheckboxes(arr){
+  if(arr)docEl.querySelectorAll('.saveQ input').forEach(cb=>{
+    cb.checked=arr.includes(parseInt(cb.dataset.q));
+  });
+}
+async function syncLibToCheckboxes(){
+  if(!current)return;
+  const subject=current.origSubject||current.subject;
+  const label=current.origLabel||current.label;
+  const r=await api('/api/library');
+  const data=r.data||{subjects:[]};
+  const sub=data.subjects.find(s=>s.name===subject);
+  if(!sub){
+    docEl.querySelectorAll('.saveQ input').forEach(cb=>{cb.checked=false;});
+    return;
+  }
+  const nums=new Set(sub.items.filter(it=>it.label===label).map(it=>it.num));
+  docEl.querySelectorAll('.saveQ input').forEach(cb=>{
+    cb.checked=nums.has(parseInt(cb.dataset.q));
+  });
+}
+function collectNotes(){
+  clearImgUI();
+  return{
+    text:docEl.innerHTML.replace(/<canvas[\s\S]*?<\/canvas>/g,''),
+    saved:savedArr()
+  };
+}
+function applyNotes(){
+  if(notes.text){
+    docEl.innerHTML=notes.text;
+    injectSaveButtons();
+    syncSavedCheckboxes(notes.saved);
+  }
+}
+async function saveNotes(){
+  if(!current)return;
+  if(current.isExam){
+    if(current.origLabel){await syncExamRecordToOriginal();return;}
+    const data=collectNotes();
+    await api('/api/save_notes',{key:'exam/'+current.examKey,data});
+    return;
+  }
+  const data=collectNotes();
+  await api('/api/save_notes',{key:current.subject+'/'+current.label,data});
+  try{syncChangedToAllExams(current.subject,current.label);}catch(e){}
+}
+async function autoSavePaper(){
+  if(!current||current.isExam)return;
+  const data=collectNotes();
+  const styleTxt='.answer{color:#cc0000;font-weight:bold}.solution,.know,.sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:14px;margin:10px 0}.know{background:#E3F2FD;border-color:#2196F3}.sim{background:#E8F5E9;border-color:#4CAF50}table{border-collapse:collapse;width:100%;margin:10px 0}th{background:#FFF3CD;border:1px solid #bbb;padding:8px}td{border:1px solid #bbb;padding:8px;vertical-align:top}img{max-width:100%}h2{color:#333;border-left:5px solid #cc0000;padding-left:10px}.saveQ{display:none}';
+  const full='<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><title>'+current.subject+' '+current.label+'</title><style>'+styleTxt+'</style></head><body>'+data.text+'</body></html>';
+  await api('/api/save_paper',{key:current.subject+' '+current.label,html:full});
+}
+function scheduleAutoSave(){
+  clearTimeout(autoTimer);
+  autoTimer=setTimeout(()=>{
+    saveNotes();
+    autoSavePaper();
+    showToast('💾 已自動儲存筆記與試卷');
+  },900);
+}
+$('btnUndo').addEventListener('mousedown',e=>e.preventDefault());
+$('btnUndo').addEventListener('click',()=>{
+  if(noteUndo.length>1){
+    noteRedo.push(noteUndo.pop());
+    noteRestore(noteUndo[noteUndo.length-1]);
+    showToast('↶ 已復原筆記');
+  }
+});
+$('btnRedo').addEventListener('mousedown',e=>e.preventDefault());
+$('btnRedo').addEventListener('click',()=>{
+  if(noteRedo.length){
+    const s=noteRedo.pop();
+    noteUndo.push(s);
+    noteRestore(s);
+    showToast('↷ 已重做筆記');
+  }
+});
+function showComparePair(title,leftHtml,rightHtml,src){
+  cmpSrc=src;
+  let cv=document.getElementById('compareView');
+  if(!cv){
+    cv=document.createElement('div');
+    cv.id='compareView';
+    cv.innerHTML='<div class="cv-head"><span id="cvTitle"></span><button id="btnCloseCompare" class="close-x">✕ 關閉</button></div><div id="cmpTools">'+
+      '<button class="tool" id="cmpBold">B</button><button class="tool" id="cmpItalic">I</button><button class="tool" id="cmpSup">x²</button><button class="tool" id="cmpSub">x₂</button>'+
+      '<span class="hl-btn" data-c="#e11d48" style="background:#e11d48"></span><span class="hl-btn" data-c="#f97316" style="background:#f97316"></span><span class="hl-btn" data-c="#22c55e" style="background:#22c55e"></span><span class="hl-btn" data-c="#2563eb" style="background:#2563eb"></span><span class="hl-btn" data-c="#111827" style="background:#111827"></span>'+
+      '<input type="color" id="cmpColor" value="#e11d48" title="文字顏色"><button class="tool" id="cmpHl">🖊️ 螢光筆</button>'+
+      '<span class="hl-btn" data-c="#ffe58a" style="background:#ffe58a"></span><span class="hl-btn" data-c="#a5d3ff" style="background:#a5d3ff"></span><span class="hl-btn" data-c="#a7e0a7" style="background:#a7e0a7"></span><span class="hl-btn" data-c="#ff9d9d" style="background:#ff9d9d"></span><span class="hl-btn" data-c="#ffb3d1" style="background:#ffb3d1"></span>'+
+      '<button class="tool" id="cmpEraser">🧽 橡皮擦</button><button class="tool" id="cmpImg">🖼️ 插入圖片</button>'+
+      '<button class="tool" id="cmpZA">A+</button><button class="tool" id="cmpZB">A-</button></div>'+
+      '<div class="cv-cols"><div class="cv-pane"><div class="cv-title">📖 原始詳解</div><div class="cv-doc" id="cmpLeftL"></div></div>'+
+      '<div class="cv-pane"><div class="cv-title">📝 我的筆記</div><div class="cv-doc" id="cmpRightR" contenteditable="true"></div></div></div>';
+    document.body.appendChild(cv);
+    document.getElementById('btnCloseCompare').onclick=()=>{cv.style.display='none';};
+    let cmpTimer=null;
+    $('cmpRightR').addEventListener('input',()=>{
+      clearTimeout(cmpTimer);
+      cmpTimer=setTimeout(()=>{applyCompareEdit(cmpSrc);},1200);
+    });
+    $('cmpBold').addEventListener('mousedown',e=>e.preventDefault());
+    $('cmpBold').addEventListener('click',()=>execCmp('bold'));
+    $('cmpItalic').addEventListener('mousedown',e=>e.preventDefault());
+    $('cmpItalic').addEventListener('click',()=>execCmp('italic'));
+    $('cmpSup').addEventListener('mousedown',e=>e.preventDefault());
+    $('cmpSup').addEventListener('click',()=>execCmp('superscript'));
+    $('cmpSub').addEventListener('mousedown',e=>e.preventDefault());
+    $('cmpSub').addEventListener('click',()=>execCmp('subscript'));
+    $('cmpZA').addEventListener('mousedown',e=>e.preventDefault());
+    $('cmpZA').onclick=()=>{
+      const r=fontSel($('cmpRightR'),2);
+      if(r){applyCompareEdit(cmpSrc);showToast('已將選字改為 '+r.size+'px');}
+    };
+    $('cmpZB').addEventListener('mousedown',e=>e.preventDefault());
+    $('cmpZB').onclick=()=>{
+      const r=fontSel($('cmpRightR'),-2);
+      if(r){applyCompareEdit(cmpSrc);showToast('已將選字改為 '+r.size+'px');}
+    };
+    document.querySelectorAll('#compareView #cmpTools .hl-btn[data-c*="#e11d48"],#compareView #cmpTools .hl-btn[data-c*="#f97316"],#compareView #cmpTools .hl-btn[data-c*="#22c55e"],#compareView #cmpTools .hl-btn[data-c*="#2563eb"],#compareView #cmpTools .hl-btn[data-c*="#111827"]').forEach(b=>{
+      b.addEventListener('mousedown',e=>e.preventDefault());
+      b.addEventListener('click',()=>execCmp('foreColor',b.dataset.c));
+    });
+    $('cmpColor').addEventListener('mousedown',e=>e.preventDefault());
+    $('cmpColor').addEventListener('change',e=>execCmp('foreColor',e.target.value));
+    $('cmpHl').onclick=()=>{
+      cmpHlDirect=!cmpHlDirect;
+      $('cmpRightR').classList.toggle('hl-mode',cmpHlDirect);
+      $('cmpHl').classList.toggle('on',cmpHlDirect);
+      if(cmpHlDirect){
+        cmpEraser=false;
+        $('cmpEraser').classList.remove('on');
+      }
+      showToast(cmpHlDirect?'🖊️ 螢光筆：拖曳劃過文字上色':'已結束');
+    };
+    document.querySelectorAll('#compareView #cmpTools .hl-btn[data-c*="#ffe58a"],#compareView #cmpTools .hl-btn[data-c*="#a5d3ff"],#compareView #cmpTools .hl-btn[data-c*="#a7e0a7"],#compareView #cmpTools .hl-btn[data-c*="#ff9d9d"],#compareView #cmpTools .hl-btn[data-c*="#ffb3d1"]').forEach(b=>{
+      b.addEventListener('mousedown',e=>e.preventDefault());
+      b.onclick=()=>{
+        hlColor=b.dataset.c;
+        if(!cmpHlDirect){
+          cmpHlDirect=true;
+          $('cmpRightR').classList.add('hl-mode');
+          $('cmpHl').classList.add('on');
+        }
+      };
+    });
+    $('cmpRightR').addEventListener('mouseup',()=>{
+      if(!cmpHlDirect)return;
+      setTimeout(()=>{
+        const sel=window.getSelection();
+        if(sel&&sel.rangeCount&&!sel.isCollapsed){
+          $('cmpRightR').focus();
+          try{
+            document.execCommand('styleWithCSS',false,true);
+            document.execCommand('hiliteColor',false,hlColor);
+            sel.removeAllRanges();
+            showToast('🖊️ 已標記');
+            setTimeout(()=>applyCompareEdit(cmpSrc),200);
+          }catch(e){}
+        }
+      },10);
+    });
+    $('cmpEraser').onclick=()=>{
+      cmpEraser=!cmpEraser;
+      $('cmpEraser').classList.toggle('on',cmpEraser);
+      if(cmpEraser){
+        cmpHlDirect=false;
+        $('cmpRightR').classList.remove('hl-mode');
+        $('cmpHl').classList.remove('on');
+      }
+      showToast(cmpEraser?'🧽 點一下螢光筆標記即消除':'已結束');
+    };
+    $('cmpRightR').addEventListener('click',e=>{
+      if(!cmpEraser)return;
+      const t=e.target;
+      if(t&&t.style&&t.style.backgroundColor){
+        t.style.backgroundColor='';
+        showToast('🧽 已消除');
+        setTimeout(()=>applyCompareEdit(cmpSrc),200);
+      }
+    });
+    $('cmpImg').onclick=()=>$('imgInputCmp').click();
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){
+        if(cmpHlDirect){
+          cmpHlDirect=false;
+          $('cmpRightR').classList.remove('hl-mode');
+          $('cmpHl').classList.remove('on');
+        }
+        if(cmpEraser){
+          cmpEraser=false;
+          $('cmpEraser').classList.remove('on');
+        }
+      }
+    });
+  }
+  document.getElementById('cvTitle').textContent=title;
+  document.getElementById('cmpLeftL').innerHTML=leftHtml;
+  document.getElementById('cmpRightR').innerHTML=rightHtml;
+  enhanceSimilarLinks(document.getElementById('cmpLeftL'));
+  enhanceSimilarLinks(document.getElementById('cmpRightR'));
+  cv.dataset.src=JSON.stringify(src);
+  convertDocToExamStyle(document.getElementById('cmpLeftL'));
+  convertDocToExamStyle(document.getElementById('cmpRightR'));
+  cv.style.display='flex';
+  const leftDoc=document.getElementById('cmpLeftL');
+  const rightDoc=document.getElementById('cmpRightR');
+  if(src&&src.num){
+    scrollToQuestion(leftDoc,src.num);
+    scrollToQuestion(rightDoc,src.num);
+  }else{
+    leftDoc.parentElement.scrollTop=0;
+    rightDoc.parentElement.scrollTop=0;
+  }
+}
+function scrollToQuestion(container,num){
+  if(!container||!num)return;
+  let target=null;
+  const re=new RegExp('第\\s*'+num+'\\s*[題题]');
+  container.querySelectorAll('h2').forEach(h=>{
+    if(re.test(h.textContent))target=h;
+  });
+  if(target){
+    try{target.scrollIntoView({block:'start'});}
+    catch(e){container.parentElement.scrollTop=target.offsetTop;}
+  }else{container.parentElement.scrollTop=0;}
+}
+function execCmp(cmd,val){
+  const el=$('cmpRightR');
+  if(!el)return;
+  el.focus();
+  try{document.execCommand('styleWithCSS',false,true);document.execCommand(cmd,false,val||null);}catch(e){}
+  setTimeout(()=>applyCompareEdit(cmpSrc),200);
+}
+$('imgInputCmp').addEventListener('change',e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const el=$('cmpRightR');
+    if(!el)return;
+    const im=document.createElement('img');
+    im.src=String(rd.result);
+    im.style.maxWidth='70%';
+    el.appendChild(im);
+    setTimeout(()=>applyCompareEdit(cmpSrc),200);
+    showToast('🖼️ 已插入圖片（自動同步）');
+  };
+  rd.readAsDataURL(f);
+  e.target.value='';
+});
+function applyCompareEdit(src){
+  const cv=document.getElementById('compareView');
+  if(!cv||!src)return;
+  const right=$('cmpRightR').innerHTML;
+  if(src.type==='round'){
+    notes.text=right;
+    /* ① 先更新 docEl（若在已寫過試卷），再保存 → 同步讀到新內容 */
+    if(current&&current.isExam){
+      docEl.innerHTML=right;
+      injectSaveButtons();
+      enhanceSimilarLinks();
+      buildQnav();
+      buildSideNav();
+      cleanupEmptyTableParts(docEl);
+      syncLibToCheckboxes();
+    }
+    /* ② 現在才保存：詳解閱讀→存筆記；已寫過試卷→存筆記＋同步回詳解＋所有作答 */
+    current&&saveNotes();
+    autoSavePaper();
+    showToast('📝 筆記已套用並同步（筆記/試卷'+(current&&current.isExam?'＋詳解＋同份作答':'')+'）');
+  }else if(src.type==='q'){
+    notes.text=replaceQInText(notes.text,src.num,right);
+    saveNotes();
+    autoSavePaper();
+    showToast('📝 該題筆記已同步');
+    const card=findLibCard(src.subject+'/'+src.label,src.num);
+    if(card){
+      card.querySelector('.libq-body').innerHTML=right;
+      enhanceSimilarLinks(card.querySelector('.libq-body'));
+      markDirty(card);
+    }
+  }
+}
+function replaceQInText(text,num,inner){
+  const re=new RegExp('(<h2[^>]*>\\s*第\\s*'+num+'\\s*[題题][\\s\\S]*?)(?=<h2[^>]*>\\s*第\\s*\\d{1,3}\\s*[題题]|$)','i');
+  if(!re.test(text))return text;
+  return text.replace(re,function(){return inner;});
+}
+function findLibCard(key,num){
+  return libBody.querySelector('.libq[data-key="'+key.replace(/"/g,'')+'"][data-num="'+num+'"]');
+}
+function enableEdit(on){
+  editMode=on;
+  docEl.contentEditable=on;
+  $('btnEdit').classList.toggle('on',on);
+  docEl.querySelectorAll('h2[contenteditable="false"], .options.exam-style').forEach(function(el){
+    el.contentEditable='false';
+  });
+  if(on){
+    noteSnapNow();
+    setHlMode(false,true);
+    setEraser(false,true);
+  }
+  showToast(on?'✏️ 編輯模式：可直接改字；B/I/上下標/顏色；↶↷復原筆記':'已離開編輯模式');
+}
+$('btnEdit').onclick=()=>enableEdit(!editMode);
+/* ═══════ ⚖️ 筆記/詳解對照按鈕（詳解閱讀 + 已寫過試卷都可用） ═══════ */
+$('btnCompare').onclick=async function(){
+  if(!current){
+    showToast('請先開啟一回');
+    return;
+  }
+  showToast('⚖️ 正在開啟對照…');
+  let leftHtml='';
+  /* 已寫過試卷：用原始檔案；詳解閱讀：直接讀原始詳解 */
+  let file=current.file;
+  if(current.isExam&&current.origFile)file=current.origFile;
+  if(!file){
+    const o=await loadOriginalDocForExam(
+      current.origSubject||current.subject,
+      current.origLabel||current.label,
+      ''
+    );
+    leftHtml=o.text;
+  }else{
+    const r=await api('/api/round',{file:file});
+    if(r.ok&&r.html)leftHtml=r.html;
+  }
+  if(!leftHtml){
+    showToast('無法取得原始詳解');
+    return;
+  }
+  showComparePair(
+    '【'+current.subject+' '+current.label+'】筆記/詳解對照',
+    leftHtml,
+    docEl.innerHTML,
+    {type:'round'}
+  );
+};
+function ensureEdit(){
+  if(!editMode){
+    editMode=true;
+    docEl.contentEditable=true;
+    $('btnEdit').classList.add('on');
+  }
+}
+function execFmt(cmd,val){
+  ensureEdit();
+  noteSnapNow();
+  try{
+    docEl.focus();
+    document.execCommand('styleWithCSS',false,true);
+    document.execCommand(cmd,false,val||null);
+  }catch(e){}
+  scheduleAutoSave();
+}
+$('btnBold').addEventListener('mousedown',e=>e.preventDefault());
+$('btnBold').addEventListener('click',()=>execFmt('bold'));
+$('btnItalic').addEventListener('mousedown',e=>e.preventDefault());
+$('btnItalic').addEventListener('click',()=>execFmt('italic'));
+$('btnSup').addEventListener('mousedown',e=>e.preventDefault());
+$('btnSup').addEventListener('click',()=>execFmt('superscript'));
+$('btnSub').addEventListener('mousedown',e=>e.preventDefault());
+$('btnSub').addEventListener('click',()=>execFmt('subscript'));
+document.querySelectorAll('#viewTop .hl-btn[data-c*="#e11d48"],#viewTop .hl-btn[data-c*="#f97316"],#viewTop .hl-btn[data-c*="#22c55e"],#viewTop .hl-btn[data-c*="#2563eb"],#viewTop .hl-btn[data-c*="#111827"]').forEach(b=>{
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.addEventListener('click',()=>{
+    execFmt('foreColor',b.dataset.c);
+    showToast('🎨 文字顏色已套用');
+  });
+});
+$('txtColor').addEventListener('mousedown',e=>e.preventDefault());
+$('txtColor').addEventListener('change',e=>{
+  execFmt('foreColor',e.target.value);
+  showToast('🎨 自訂顏色已套用');
+});
+/* ═══════ 螢光筆：包 span（不空格、保留選取） ═══════ */
+function applyHlToSelection(color){
+  const sel=window.getSelection();
+  if(!sel||!sel.rangeCount||sel.isCollapsed)return false;
+  if(!editMode){showToast('請先點擊「✏️ 編輯文字」再使用螢光筆');return false;}
+  noteSnapNow();
+  docEl.focus();
+  try{
+    const range=sel.getRangeAt(0);
+    const frag=range.cloneContents();
+    if(!(frag.textContent||'').trim()&&!frag.querySelector('img'))return false;
+    const extracted=range.extractContents();
+    const sp=document.createElement('span');
+    sp.style.backgroundColor=color||hlColor;
+    sp.appendChild(extracted);
+    range.insertNode(sp);
+    sel.removeAllRanges();
+    try{
+      const nr=document.createRange();
+      nr.selectNodeContents(sp);
+      sel.addRange(nr);
+    }catch(e){}
+    try{cleanupEmptySpans(docEl);}catch(e){}
+    scheduleAutoSave();
+    showToast('🖊️ 已標記');
+    return true;
+  }catch(e){
+    showToast('標記失敗');
+    return false;
+  }
+}
+function setHlMode(on,silent){
+  hlDirect=on;
+  docEl.classList.toggle('hl-mode',on);
+  $('btnHlToggle').classList.toggle('on',on);
+  if(on){
+    setEraser(false,true);
+    if(selImg)clearImgUI();
+  }
+  if(!silent) showToast(on?'🖊️ 螢光筆：拖曳劃過文字上色（ESC 結束）':'已結束螢光筆');
+}
+$('btnHlToggle').onclick=()=>{
+  if(!editMode){showToast('請先點擊「✏️ 編輯文字」再使用螢光筆');return;}
+  const sel=window.getSelection();
+  if(sel&&sel.rangeCount&&!sel.isCollapsed&&docEl.contains(sel.anchorNode)){
+    applyHlToSelection(hlColor);
+    return;
+  }
+  setHlMode(!hlDirect);
+};
+document.querySelectorAll('#viewTop .hl-btn[data-c="#ffe58a"],#viewTop .hl-btn[data-c="#a5d3ff"],#viewTop .hl-btn[data-c="#a7e0a7"],#viewTop .hl-btn[data-c="#ff9d9d"],#viewTop .hl-btn[data-c="#ffb3d1"]').forEach(b=>{
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.onclick=()=>{
+    hlColor=b.dataset.c;
+    if(!editMode){showToast('請先點擊「✏️ 編輯文字」再使用螢光筆');return;}
+    const sel=window.getSelection();
+    if(sel&&sel.rangeCount&&!sel.isCollapsed&&docEl.contains(sel.anchorNode)){
+      applyHlToSelection(hlColor);
+      return;
+    }
+    if(!hlDirect)setHlMode(true);
+    else showToast('🎨 顏色已選｜拖曳劃過文字即上色');
+  };
+});
+docEl.addEventListener('mouseup',()=>{
+  if(!hlDirect)return;
+  setTimeout(()=>{
+    const sel=window.getSelection();
+    if(sel&&sel.rangeCount&&!sel.isCollapsed&&docEl.contains(sel.anchorNode)){
+      applyHlToSelection(hlColor);
+    }
+  },10);
+});
+function setEraser(on,silent){
+  if(eraserMode===on&&!silent)return;
+  eraserMode=on;
+  $('btnEraser').classList.toggle('on',on);
+  if(on)setHlMode(false,true);
+  if(!silent) showToast(on?'🧽 橡皮擦：點一下螢光筆標記即消除（ESC 結束）':'已結束橡皮擦');
+}
+$('btnEraser').onclick=()=>{
+  if(!editMode){showToast('請先點擊「✏️ 編輯文字」再使用橡皮擦');return;}
+  setEraser(!eraserMode);
+};
+docEl.addEventListener('click',e=>{
+  if(!eraserMode)return;
+  const t=e.target;
+  if(t&&t.style&&t.style.backgroundColor){
+    noteSnapNow();
+    t.style.backgroundColor='';
+    showToast('🧽 已消除該螢光筆標記');
+    scheduleAutoSave();
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(hlDirect)setHlMode(false);
+    else if(eraserMode)setEraser(false);
+  }
+});
+docEl.addEventListener('click',function(e){
+  if(editMode)return;
+  if(examCtx&&examCtx.mode==='take')return;
+  const t=e.target;
+  if(!t||!t.closest)return;
+  if(t.closest('a,button,label.saveQ,.movable-img,.img-handle,.img-rotate,.img-tools,.hl-btn,.sim-add,#qnav'))return;
+  showToast('請先點擊「✏️ 編輯文字」即可開始筆記');
+});
+libBody.addEventListener('click',function(e){
+  if(editModeLib)return;
+  const t=e.target;
+  if(!t||!t.closest)return;
+  if(t.closest('button,a,.movable-img,.hl-btn,.sim-add'))return;
+  showToast('請先點擊「✏️ 編輯」即可開始筆記');
+});
+function insertAtViewportCenter(img){
+  const cx=window.innerWidth/2,cy=window.innerHeight/2;
+  let el=document.elementFromPoint(cx,cy);
+  while(el&&el!==docEl&&!docEl.contains(el))el=el.parentElement;
+  if(el&&docEl.contains(el)){
+    if(el===docEl)docEl.appendChild(img);
+    else el.parentNode.insertBefore(img,el.nextSibling);
+  }
+  else docEl.appendChild(img);
+  /* 以 docWrap 為定位基準 → 絕對定位（浮動不擠文字），
+     並加上目前捲動距離 → 圖片插在「目前畫面中央」而非第一頁 */
+  const wrapRect=docWrap.getBoundingClientRect();
+  const r=img.getBoundingClientRect();
+  const scrollLeft=docWrap.scrollLeft||0;
+  const scrollTop=docWrap.scrollTop||0;
+  img.style.position='absolute';
+  img.style.zIndex='50';
+  img.style.left=(cx-wrapRect.left-(r.width/2))+scrollLeft+'px';
+  img.style.top=(cy-wrapRect.top-(r.height/2))+scrollTop+'px';
+}
+function clearImgUI(){
+  document.querySelectorAll('.img-handle,.img-rotate,.img-tools').forEach(el=>el.remove());
+  selHandles=[];
+  rotHandle=null;
+  imgToolbar=null;
+  if(selImg){
+    selImg.classList.remove('selected');
+    selImg=null;
+  }
+}
+function imgCenter(img){
+  const r=img.getBoundingClientRect();
+  return{cx:r.left+r.width/2,cy:r.top+r.height/2};
+}
+function updateImgUI(){
+  if(!selImg)return;
+  const r=selImg.getBoundingClientRect();
+  selHandles.forEach(h=>{
+    let x=0,y=0;
+    switch(h.dataset.pos){
+      case'nw':x=r.left-6;y=r.top-6;break;
+      case'ne':x=r.right-6;y=r.top-6;break;
+      case'sw':x=r.left-6;y=r.bottom-6;break;
+      case'se':x=r.right-6;y=r.bottom-6;break;
+    }
+    h.style.left=x+'px';
+    h.style.top=y+'px';
+  });
+  if(rotHandle){
+    rotHandle.style.left=(r.left+r.width/2-8)+'px';
+    rotHandle.style.top=(r.top-24)+'px';
+  }
+  if(imgToolbar){
+    imgToolbar.style.left=r.left+'px';
+    imgToolbar.style.top=Math.max(4,r.top-40)+'px';
+  }
+}
+function selectImg(img){
+  clearImgUI();
+  selImg=img;
+  img.classList.add('selected');
+  const defs=[{pos:'nw',cur:'nwse-resize'},{pos:'ne',cur:'nesw-resize'},{pos:'sw',cur:'nesw-resize'},{pos:'se',cur:'nwse-resize'}];
+  selHandles=defs.map(d=>{
+    const h=document.createElement('div');
+    h.className='img-handle';
+    h.dataset.pos=d.pos;
+    h.style.cursor=d.cur;
+    h.addEventListener('mousedown',ev=>{
+      ev.preventDefault();
+      ev.stopPropagation();
+      startImgResize(ev,h);
+    });
+    document.body.appendChild(h);
+    return h;
+  });
+  rotHandle=document.createElement('div');
+  rotHandle.className='img-rotate';
+  rotHandle.title='拖曳旋轉';
+  rotHandle.addEventListener('mousedown',ev=>{
+    ev.preventDefault();
+    ev.stopPropagation();
+    noteSnapNow();
+    const c=imgCenter(img);
+    const baseRot=parseFloat(img.dataset.rot||'0');
+    const rotStart=Math.atan2(ev.clientY-c.cy,ev.clientX-c.cx)*180/Math.PI;
+    const mv=e2=>{
+      const now=Math.atan2(e2.clientY-c.cy,e2.clientX-c.cx)*180/Math.PI;
+      let rot=baseRot+(now-rotStart)%360;
+      img.dataset.rot=String(rot);
+      img.style.transform='rotate('+rot+'deg)';
+    };
+    const up=()=>{
+      document.removeEventListener('mousemove',mv);
+      document.removeEventListener('mouseup',up);
+      scheduleAutoSave();
+      showToast('↻ 已旋轉圖片');
+    };
+    document.addEventListener('mousemove',mv);
+    document.addEventListener('mouseup',up);
+  });
+  document.body.appendChild(rotHandle);
+  imgToolbar=document.createElement('div');
+  imgToolbar.className='img-tools';
+  const bPanel=document.createElement('button');
+  bPanel.textContent='⚙️ 調整';
+  bPanel.onclick=e=>{
+    e.stopPropagation();
+    showImgPanel(img);
+  };
+  imgToolbar.appendChild(bPanel);
+  const bRot=document.createElement('button');
+  bRot.textContent='↻ +15°';
+  bRot.onclick=e=>{
+    e.stopPropagation();
+    noteSnapNow();
+    let rot=(parseFloat(img.dataset.rot||'0')+15)%360;
+    img.dataset.rot=String(rot);
+    img.style.transform='rotate('+rot+'deg)';
+    scheduleAutoSave();
+  };
+  const bRotCCW=document.createElement('button');
+  bRotCCW.textContent='↺ -15°';
+  bRotCCW.onclick=e=>{
+    e.stopPropagation();
+    noteSnapNow();
+    let rot=((parseFloat(img.dataset.rot||'0')-15)%360+360)%360;
+    img.dataset.rot=String(rot);
+    img.style.transform='rotate('+rot+'deg)';
+    scheduleAutoSave();
+    showToast('↺ 已逆時針旋轉 15°');
+  };
+  imgToolbar.appendChild(bRotCCW);
+  const bDel=document.createElement('button');
+  bDel.textContent='✖ 刪除';
+  bDel.onclick=e=>{
+    e.stopPropagation();
+    noteSnapNow();
+    img.remove();
+    clearImgUI();
+    scheduleAutoSave();
+    showToast('🗑️ 圖片已刪除');
+  };
+  imgToolbar.appendChild(bRot);
+  imgToolbar.appendChild(bDel);
+  document.body.appendChild(imgToolbar);
+  updateImgUI();
+  showToast('📌 拖圖片＝移動；拖角落＝縮放；拖橘點＝旋轉；工具列可刪除');
+}
+function showImgPanel(img){
+  let p=document.getElementById('imgPanel');
+  if(p)p.remove();
+  p=document.createElement('div');
+  p.id='imgPanel';
+  p.style.cssText='position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:#fff;border:2px solid #4f8cff;border-radius:12px;padding:12px;z-index:1000;width:92%;max-width:420px;box-shadow:0 8px 24px rgba(0,0,0,.35)';
+  const curW=Math.round((parseFloat(img.style.width)||100));
+  p.innerHTML='<div style="font-weight:700;margin-bottom:8px">🖼️ 圖片調整</div>'+
+    '<label style="display:block;font-size:13px;margin:4px 0">大小 <input type="range" id="ipW" min="10" max="100" value="'+curW+'" style="width:100%"></label>'+
+    '<label style="display:block;font-size:13px;margin:4px 0">旋轉 <input type="range" id="ipR" min="0" max="359" value="'+(parseFloat(img.dataset.rot||0)||0)+'" style="width:100%"></label>'+
+    '<div style="display:flex;justify-content:flex-end;gap:6px;margin-top:8px">'+
+      '<button id="ipOk" style="background:#4f8cff;border-color:#4f8cff;color:#fff">完成</button>'+
+      '<button id="ipDel" style="background:#e11d48;border-color:#e11d48;color:#fff">刪除圖片</button>'+
+    '</div>';
+ document.body.appendChild(p);
+  document.getElementById('ipW').oninput=function(){
+    noteSnapNow();            /* ← 滑桿調整也快照 */
+    img.style.width=this.value+'%';
+    img.style.height='auto';
+    updateImgUI();
+  };
+  document.getElementById('ipR').oninput=function(){
+    noteSnapNow();            /* ← 旋轉滑桿也快照 */
+    img.style.transform='rotate('+this.value+'deg)';
+    img.dataset.rot=String(this.value);
+  };
+  document.getElementById('ipOk').onclick=function(){
+    p.remove();
+    scheduleAutoSave();
+  };
+  document.getElementById('ipDel').onclick=function(){
+    noteSnapNow();
+    img.remove();
+    p.remove();
+    clearImgUI();
+    scheduleAutoSave();
+    showToast('🗑️ 圖片已刪除');
+  };
+}
+function startImgResize(ev,handle){
+  const img=selImg;
+  if(!img)return;
+  noteSnapNow();
+  const rect=img.getBoundingClientRect();
+  const sx=ev.clientX,sy=ev.clientY;
+  const ow=rect.width,oh=rect.height;
+  const nat=(img.naturalWidth&&img.naturalHeight)?img.naturalWidth/img.naturalHeight:(ow/oh||1);
+  const pos=handle.dataset.pos;
+  const onMove=e=>{
+    const dx=e.clientX-sx,dy=e.clientY-sy;
+    let nw=ow;
+    if(pos.includes('e'))nw=ow+dx;
+    if(pos.includes('w'))nw=ow-dx;
+    if(pos.includes('s'))nw=Math.max(ow+(ow/oh)*dy,20);
+    if(pos.includes('n'))nw=Math.max(ow-(ow/oh)*dy,20);
+    img.style.position='absolute';
+    img.style.width=Math.round(nw)+'px';
+    img.style.height=Math.round(nw/nat)+'px';
+    updateImgUI();
+  };
+  const onUp=()=>{
+    document.removeEventListener('mousemove',onMove);
+    document.removeEventListener('mouseup',onUp);
+    noteSnapNow();          /* ← 縮放後快照，復原/重做可用 */
+    scheduleAutoSave();
+    showToast('📐 圖片大小已調整');
+  };
+  document.addEventListener('mousemove',onMove);
+  document.addEventListener('mouseup',onUp);
+}
+function startImgMove(e,img){
+  noteSnapNow();
+  const sx=e.clientX,sy=e.clientY;
+  const baseL=parseFloat(img.style.left)||0,baseT=parseFloat(img.style.top)||0;
+  const move=ev=>{
+    img.style.position='absolute';   /* 浮動：不佔版面、不推文字 */
+    img.style.left=(baseL+ev.clientX-sx)+'px';
+    img.style.top=(baseT+ev.clientY-sy)+'px';
+    updateImgUI();
+  };
+  const up=()=>{
+    document.removeEventListener('mousemove',move);
+    document.removeEventListener('mouseup',up);
+    noteSnapNow();          /* ← 結束時再快照：記錄「移動後」狀態，讓復原/重做可用 */
+    scheduleAutoSave();
+    showToast('📌 圖片已移動');
+  };
+  document.addEventListener('mousemove',move);
+  document.addEventListener('mouseup',up);
+}
+docEl.addEventListener('mousedown',e=>{
+   if(window.__imgTouchHandled){window.__imgTouchHandled=false;return;}
+  if(!editMode||hlDirect||eraserMode)return;
+  const img=e.target&&e.target.closest?e.target.closest('img.movable-img'):null;
+  if(!img)return;
+  e.preventDefault();
+  e.stopPropagation();
+  if(selImg!==img)selectImg(img);
+  startImgMove(e,img);
+});
+docEl.addEventListener('click',e=>{
+  if(e.target&&e.target.closest&&e.target.closest('img.movable-img'))return;
+  if(!eraserMode)clearImgUI();
+});
+document.addEventListener('mousedown',e=>{
+  if(e.target&&e.target.closest&&e.target.closest('img.movable-img'))return;
+  if(e.target&&e.target.closest&&e.target.closest('.img-tools'))return;
+  if(e.target&&e.target.classList&&(e.target.classList.contains('img-handle')||e.target.classList.contains('img-rotate')||e.target.classList.contains('img-tools')))return;
+  if(!docEl.contains(e.target)&&!isLibActive())clearImgUI();
+});
+$('btnImage').onclick=()=>{
+  if(!editMode){showToast('請先點擊「✏️ 編輯文字」再插入圖片');return;}
+  if(hlDirect||eraserMode){showToast('請先離開螢光筆/橡皮擦模式');return;}
+  showToast('📷 選圖後插入畫面中央（可移動/縮放/旋轉/刪除）');
+  $('imgInput').click();
+};
+$('imgInput').addEventListener('change',e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    noteSnapNow();
+    const im=document.createElement('img');
+    im.src=String(rd.result);
+    im.alt=f.name.replace(/\.[^.]+$/,'');
+    im.className='movable-img';
+    im.draggable=false;
+    im.style.maxWidth='70%';
+    insertAtViewportCenter(im);
+    selectImg(im);
+    scheduleAutoSave();
+    showToast('🖼️ 圖片已插入（內嵌，自動儲存）');
+  };
+  rd.readAsDataURL(f);
+  e.target.value='';
+});
+/* ═══════ 手機/平板：圖片一指移動 + 兩指縮放/旋轉（Pointer 事件） ═══════ */
+window.__imgTouchHandled=false;
+let __imgTouch={active:false,map:new Map(),start:null,pinchCx:null,pinchCy:null};
+function __imgFrom(e){
+  const t=e.target;
+  if(!t||!t.closest)return null;
+  return t.closest('img.movable-img');
+}
+docEl.addEventListener('pointerdown',function(e){
+  if(e.pointerType!=='touch')return;
+  if(e.target.closest&&e.target.closest('.img-tools'))return;
+  const img=__imgFrom(e);
+  if(!img)return;
+  if(!editMode||hlDirect||eraserMode)return;
+  e.preventDefault();
+  window.__imgTouchHandled=true;
+  __imgTouch.map.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(!__imgTouch.active){
+    __imgTouch.active=true;
+    if(selImg!==img)selectImg(img);
+    const r=img.getBoundingClientRect();
+    __imgTouch.start={
+      img:img,
+      left:parseFloat(img.style.left)||0,
+      top:parseFloat(img.style.top)||0,
+      w:r.width||img.naturalWidth||300,
+      h:r.height||img.naturalHeight||300,
+      rot:parseFloat(img.dataset.rot||'0')||0,
+      px:e.clientX,py:e.clientY,
+      dist:0,angle:0
+    };
+    __imgTouch.pinchCx=null;
+    __imgTouch.pinchCy=null;
+  }
+},{passive:false});
+document.addEventListener('pointermove',function(e){
+  if(e.pointerType!=='touch')return;
+  if(!__imgTouch.active||!__imgTouch.start)return;
+  __imgTouch.map.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  const pts=Array.from(__imgTouch.map.values());
+  const s=__imgTouch.start;
+  if(pts.length>=2){
+    e.preventDefault();
+    const dx=pts[0].x-pts[1].x,dy=pts[0].y-pts[1].y;
+    const dist=Math.hypot(dx,dy);
+    const angle=Math.atan2(dy,dx)*180/Math.PI;
+    if(!s.dist){s.dist=dist;s.angle=angle;return;}
+    const cx=(pts[0].x+pts[1].x)/2,cy=(pts[0].y+pts[1].y)/2;
+    if(__imgTouch.pinchCx===null){__imgTouch.pinchCx=cx;__imgTouch.pinchCy=cy;}
+    s.img.style.position='absolute';
+    s.img.style.left=(s.left+(cx-__imgTouch.pinchCx))+'px';
+    s.img.style.top=(s.top+(cy-__imgTouch.pinchCy))+'px';
+    s.img.style.width=Math.max(40,s.w*(dist/(s.dist||1)))+'px';
+    s.img.style.height=Math.max(30,s.h*(dist/(s.dist||1)))+'px';
+    let rot=s.rot+(angle-s.angle);
+    s.img.dataset.rot=String(((rot%360)+360)%360);
+    s.img.style.transform='rotate('+rot+'deg)';
+    updateImgUI();
+  }else if(pts.length===1){
+    const p=pts[0];
+    s.img.style.position='absolute';
+    s.img.style.left=(s.left+(p.x-s.px))+'px';
+    s.img.style.top=(s.top+(p.y-s.py))+'px';
+    updateImgUI();
+    e.preventDefault();
+  }
+},{passive:false});
+function __imgTouchEnd(e){
+  if(e.pointerType!=='touch')return;
+  __imgTouch.map.delete(e.pointerId);
+  if(__imgTouch.map.size===0){
+    if(__imgTouch.start){
+      noteSnapNow();
+      scheduleAutoSave();
+      showToast('📌 圖片已調整（自動儲存）');
+    }
+    __imgTouch.active=false;
+    __imgTouch.start=null;
+    __imgTouch.pinchCx=null;
+    __imgTouch.pinchCy=null;
+  }
+}
+document.addEventListener('pointerup',__imgTouchEnd);
+document.addEventListener('pointercancel',__imgTouchEnd);
+document.addEventListener('pointerup',function(e){
+  if(e.pointerType!=='touch')return;
+  const btn=e.target&&e.target.closest?e.target.closest('.img-tools button'):null;
+  if(btn){
+    e.preventDefault();
+    e.stopPropagation();
+    btn.click();
+  }
+},true);
+window.addEventListener('scroll',updateImgUI,true);
+docEl.addEventListener('input',()=>{
+  if(!editMode)return;
+  if(!noteActionLock)noteActionLock=true;
+  clearTimeout(noteTextTimer);
+  noteTextTimer=setTimeout(()=>{
+    noteActionLock=false;
+    noteSnapNow();
+    scheduleAutoSave();
+  },600);
+  if(current&&current.isExam&&current.origLabel){
+    clearTimeout(examSyncTimer);
+    examSyncTimer=setTimeout(()=>{saveNotes();},1500);
+  }
+});
+/* ═══════ A+/A-：編輯時改「選區文字」大小；無選區時改全局 ═══════ */
+$('btnZoomIn').onclick=()=>{
+  if(editMode){
+    const r=fontSel(docEl,2);
+    if(r){
+      noteSnapNow();
+      scheduleAutoSave();
+      showToast('已將選字改為 '+r.size+'px');
+      return;
+    }
+  }
+  docFont=Math.min(28,docFont+1);
+  setDocFont();
+};
+$('btnZoomOut').onclick=()=>{
+  if(editMode){
+    const r=fontSel(docEl,-2);
+    if(r){
+      noteSnapNow();
+      scheduleAutoSave();
+      showToast('已將選字改為 '+r.size+'px');
+      return;
+    }
+  }
+  docFont=Math.max(12,docFont-1);
+  setDocFont();
+};
+function setDocFont(){
+  docEl.style.fontSize=docFont+'px';
+  docEl.querySelectorAll('p,.options,.answer,.solution,.know,.sim').forEach(el=>{
+    el.style.fontSize=docFont+'px';
+  });
+}
+$('btnViewIn').onclick=()=>{
+  viewZoom=Math.min(1.6,viewZoom+0.1);
+  applyZoom();
+};
+$('btnViewOut').onclick=()=>{
+  viewZoom=Math.max(0.7,viewZoom-0.1);
+  applyZoom();
+};
+function applyZoom(){view.style.zoom=viewZoom;}
+$('btnViewInLib').onclick=()=>{
+  lib.style.zoom=Math.min(1.6,(parseFloat(lib.style.zoom)||1)+0.1);
+};
+$('btnViewOutLib').onclick=()=>{
+  lib.style.zoom=Math.max(0.7,(parseFloat(lib.style.zoom)||1)-0.1);
+};
+/* ═══════ 試題庫 A+/A-：編輯時改選區文字大小 ═══════ */
+$('btnZoomInLib').onclick=()=>{
+  if(editModeLib){
+    const b=activeLibBody();
+    if(b){
+      const r=fontSel(b,2);
+      if(r){
+        if(activeLibCard)markDirty(activeLibCard);
+        showToast('已將選字改為 '+r.size+'px');
+        return;
+      }
+    }
+  }
+  libDocFont=Math.min(24,libDocFont+1);
+  setLibFont();
+};
+$('btnZoomOutLib').onclick=()=>{
+  if(editModeLib){
+    const b=activeLibBody();
+    if(b){
+      const r=fontSel(b,-2);
+      if(r){
+        if(activeLibCard)markDirty(activeLibCard);
+        showToast('已將選字改為 '+r.size+'px');
+        return;
+      }
+    }
+  }
+  libDocFont=Math.max(12,libDocFont-1);
+  setLibFont();
+};
+function buildLabelMap(){
+  labelMap={};
+  (DB.subjects||[]).forEach(s=>s.rounds.forEach(r=>{
+    if(!labelMap[r.label])labelMap[r.label]=[];
+    labelMap[r.label].push({subject:s.name,file:r.file});
+  }));
+}
+const CN={'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'十':10};
+function parseSimilar(txt){
+  const m=txt.match(/(\d{3})\s*[-年/]?\s*(?:第\s*)?([1-9一二三四五六七八九十]|1[0-2])\s*(?:次|期)?\s*第\s*(\d{1,3})\s*[題题]/);
+  if(!m)return null;
+  return{year:m[1],term:CN[m[2]]||parseInt(m[2]),num:parseInt(m[3])};
+}
+function labelKeyNums(label){
+  const m=label.match(/^(\d{3})\s*[-年/]?\s*(?:第\s*)?([1-9一二三四五六七八九十]|1[0-2])\s*(?:次|期)?$/);
+  if(!m)return null;
+  return{year:m[1],term:CN[m[2]]||parseInt(m[2])};
+}
+function findCands(info){
+  const key=info.year+'-'+info.term;
+  let cands=labelMap[key]||[];
+  if(!cands.length){
+    for(const k of Object.keys(labelMap)){
+      const p=labelKeyNums(k);
+      if(p&&p.year===String(info.year)&&p.term===info.term){
+        cands.push(...labelMap[k]);
+      }
+    }
+  }
+  return cands;
+}
+function makeSimSpan(text){
+  const span=document.createElement('span');
+  span.style.whiteSpace='nowrap';
+  const a=document.createElement('a');
+  a.href='#';
+  a.className='sim-link';
+  a.textContent=text.trim();
+  a.style.color='#2563eb';
+  a.style.cursor='pointer';
+  a.style.textDecoration='underline';
+  span.appendChild(a);
+  return span;
+}
+document.addEventListener('click',function(e){
+  const a=e.target&&e.target.closest?e.target.closest('a.sim-link, .sim a, .win-body a, #compareView a'):null;
+  if(a){
+    e.preventDefault();
+    const info=parseSimilar(a.textContent);
+    if(info)openCompare(info);
+  }
+},true);
+function linkifySimBox(box){
+  if(!box)return;
+  const walker=document.createTreeWalker(box,NodeFilter.SHOW_TEXT);
+  const nodes=[];
+  while(walker.nextNode()){
+    const node=walker.currentNode;
+    const p=node.parentNode;
+    if(p&&p.closest&&p.closest('a'))continue;
+    nodes.push(node);
+  }
+  nodes.forEach(node=>{
+    const t=node.nodeValue||'';
+    const re=/(\d{3})\s*[-年/]?\s*(?:第\s*)?([1-9一二三四五六七八九十]|1[0-2])\s*(?:次|期)?\s*第\s*(\d{1,3})\s*[題题]/g;
+    let last=0,mm,any=false;
+    const frag=document.createDocumentFragment();
+    while((mm=re.exec(t))!==null){
+      any=true;
+      frag.appendChild(document.createTextNode(t.slice(last,mm.index)));
+      const span=makeSimSpan(mm[0]);
+      frag.appendChild(span);
+      last=re.lastIndex;
+    }
+    if(any){
+      frag.appendChild(document.createTextNode(t.slice(last)));
+      node.parentNode.replaceChild(frag,node);
+    }
+  });
+}
+function enhanceSimilarLinks(scope){
+  const root=scope||docEl;
+  root.querySelectorAll('.sim-del,.sim-x').forEach(el=>el.remove());
+  const boxes=[];
+  if(root.classList&&root.classList.contains('sim'))boxes.push(root);
+  root.querySelectorAll('.sim').forEach(b=>{
+    if(boxes.indexOf(b)===-1)boxes.push(b);
+  });
+  boxes.forEach(box=>{
+    if(box.dataset.linked)return;
+    box.dataset.linked='1';
+    linkifySimBox(box);
+  });
+  injectSimAddButtons(root);
+}
+function detectSimFormat(box){
+  const txt=(box.textContent||'');
+  const a=(txt.match(/\d{3}\s*年\s*第\s*\d{1,2}\s*次\s*第\s*\d{1,3}\s*[題题]/g)||[]).length;
+  const b=(txt.match(/\d{3}\s*[-/]\s*\d{1,2}\s*第\s*\d{1,3}\s*[題题]/g)||[]).length;
+  return b>a?'B':'A';
+}
+function buildSimText(fmt,year,term,num,note){
+  const y=String(year);
+  const t=parseInt(term)||1;
+  const n=parseInt(num)||0;
+  let head=(fmt==='B')?(y+'-'+t+' 第'+n+'題'):(y+'年 第'+t+'次 第'+n+'題');
+  return note?head+'('+note+')':head;
+}
+function injectSimAddButtons(root){
+  const boxes=[];
+  if(root&&root.classList&&root.classList.contains('sim'))boxes.push(root);
+  (root||docEl).querySelectorAll('.sim').forEach(b=>{
+    if(boxes.indexOf(b)===-1)boxes.push(b);
+  });
+  boxes.forEach(box=>{
+    let btn=box.querySelector('.sim-add');
+    if(!btn){
+      btn=document.createElement('button');
+      btn.className='sim-add';
+      btn.textContent='➕ 新增相似考題';
+      const head=box.querySelector('b');
+      if(head&&head.parentNode){
+        head.parentNode.insertBefore(btn,head.nextSibling);
+      }else{
+        box.appendChild(btn);
+      }
+    }
+    btn.onclick=function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      openSimAddModal(box);
+    };
+  });
+}
+function openSimAddModal(box){
+  simModalTarget=box;
+  const oldMv=document.getElementById('simAddModal');
+  if(oldMv)oldMv.remove();
+  const mv=document.createElement('div');
+  mv.id='simAddModal';
+  mv.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;display:flex;align-items:center;justify-content:center';
+  mv.innerHTML='<div style="background:#fff;color:#222;border-radius:12px;padding:18px;width:600px;max-width:92vw;box-shadow:0 12px 40px rgba(0,0,0,.45)">'+
+    '<div style="font-weight:700;margin-bottom:8px">➕ 新增相似考題</div>'+
+    '<div style="font-size:12px;color:#666;margin-bottom:12px">填入數字即可，會自動生成可點連結；格式會跟隨旁邊既有條目（113年 第2次 或 112-1）</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">'+
+      '<div><div style="font-size:12px;color:#555;margin-bottom:3px">年份（3位數）</div><input id="simY" type="number" min="100" max="999" placeholder="113" style="width:90px;font-size:14px;padding:6px;border:1px solid #bbb;border-radius:6px"></div>'+
+      '<div><div style="font-size:12px;color:#555;margin-bottom:3px">第幾次</div><input id="simT" type="number" min="1" max="12" placeholder="2" style="width:90px;font-size:14px;padding:6px;border:1px solid #bbb;border-radius:6px"></div>'+
+      '<div><div style="font-size:12px;color:#555;margin-bottom:3px">第幾題</div><input id="simN" type="number" min="1" max="999" placeholder="44" style="width:90px;font-size:14px;padding:6px;border:1px solid #bbb;border-radius:6px"></div>'+
+    '</div>'+
+    '<div style="font-size:12px;color:#555;margin-bottom:3px">自由備註（可留空）</div>'+
+    '<input id="simNote" type="text" placeholder="例如：B 姿勢改變→交感活性增加" style="width:100%;font-size:14px;padding:6px;border:1px solid #bbb;border-radius:6px;margin-bottom:10px">'+
+    '<div style="text-align:right"><button id="simAddCancel" style="margin-right:8px">取消</button><button id="simAddOk" style="background:#4f8cff;border-color:#4f8cff;color:#fff">確定新增</button></div></div>';
+  document.body.appendChild(mv);
+  mv.addEventListener('click',function(e){
+    if(e.target===mv){
+      mv.remove();
+    }
+  });
+  mv.querySelector('#simAddCancel').onclick=function(){
+    try{mv.remove();}catch(e){}
+  };
+  mv.querySelector('#simAddOk').onclick=function(){
+    try{
+      const y=mv.querySelector('#simY').value.trim();
+      const t=mv.querySelector('#simT').value.trim();
+      const n=mv.querySelector('#simN').value.trim();
+      const note=mv.querySelector('#simNote').value.trim();
+      if(!/^\d{3}$/.test(y)){
+        showToast('年份請輸入3位數字，例如 113');
+        return;
+      }
+      if(!t||parseInt(t)<1){
+        showToast('請輸入第幾次，例如 2');
+        return;
+      }
+      if(!n||parseInt(n)<1){
+        showToast('請輸入第幾題，例如 44');
+        return;
+      }
+      if(simModalTarget){
+        const fmt=detectSimFormat(simModalTarget);
+        const line=document.createElement('div');
+        line.style.cssText='margin:4px 0;line-height:1.7';
+        line.style.setProperty('font-size','16px','important');
+        line.textContent=buildSimText(fmt,y,t,n,note);
+        simModalTarget.appendChild(line);
+        delete simModalTarget.dataset.linked;
+        linkifySimBox(simModalTarget);
+        simModalTarget.dataset.linked='1';
+        injectSimAddButtons(simModalTarget);
+        const card=simModalTarget.closest('.libq');
+        if(card){
+          markDirty(card);
+        }else{
+          try{noteSnapNow();}catch(e){}
+          scheduleAutoSave();
+        }
+        showToast('✅ 已新增相似考題（自動儲存）');
+      }
+    }catch(err){
+      showToast('新增失敗：'+err.message);
+    }
+    finally{
+      mv.remove();
+    }
+  };
+  setTimeout(function(){
+    const el=document.getElementById('simY');
+    if(el)el.focus();
+  },50);
+}
+async function openCompare(info){
+  const cands=findCands(info);
+  if(!cands.length){
+    showToast('哆啦呦噠尚未製作該題詳解');
+    return;
+  }
+  if(!current){
+    showToast('請先開啟一個科目，相似題型只會找同科');
+    return;
+  }
+  const target=cands.find(c=>c.subject===current.subject);
+  if(!target){
+    showToast('該科目尚未製作此相似題（不跨科）');
+    return;
+  }
+  const r=await api('/api/question',{file:target.file,num:info.num});
+  if(!r.ok){
+    showToast('該科目尚未製作該題詳解');
+    return;
+  }
+  const n=await api('/api/notes',{key:target.subject+'/'+(info.year+'-'+info.term)});
+  let noteFrag='';
+  if(n.data&&n.data.text)noteFrag=extractQFromText(n.data.text,info.num);
+  if(!noteFrag)noteFrag=r.html;
+  makeWin(target.subject+' '+(info.year+'-'+info.term)+' 第'+info.num+'題',r.html,noteFrag,{
+    type:'q',subject:target.subject,label:info.year+'-'+info.term,file:target.file,num:info.num
+  });
+}
+function addWinResize(w){
+  ['nw','ne','sw','se'].forEach(pos=>{
+    const h=document.createElement('div');
+    h.className='win-resize '+pos;
+    h.addEventListener('pointerdown',e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      const r=w.getBoundingClientRect();
+      const sx=e.clientX,sy=e.clientY;
+      const sw=r.width,sh=r.height,sl=r.left,st=r.top;
+      const move=ev=>{
+        const dx=ev.clientX-sx,dy=ev.clientY-sy;
+        let left=sl,top=st,width=sw,height=sh;
+        if(pos.includes('w')){width=sw-dx;left=sl+dx;}
+        if(pos.includes('e')){width=sw+dx;}
+        if(pos.includes('n')){height=sh-dy;top=st+dy;}
+        if(pos.includes('s')){height=sh+dy;}
+        width=Math.max(300,width);
+        height=Math.max(200,height);
+        w.style.width=width+'px';
+        w.style.height=height+'px';
+        if(pos.includes('w'))w.style.left=left+'px';
+        if(pos.includes('n'))w.style.top=top+'px';
+      };
+      const up=()=>{
+        document.removeEventListener('pointermove',move);
+        document.removeEventListener('mouseup',up);
+      };
+      document.addEventListener('mousemove',move);
+      document.addEventListener('pointerup',up);
+    });
+    w.appendChild(h);
+  });
+}
+function makeWin(title,leftHtml,rightHtml,src){
+  winCnt++;
+  const w=document.createElement('div');
+  w.className='win';
+  w.style.top=(60+((winCnt-1)%5)*30)+'px';
+  w.style.right=(12+((winCnt-1)%3)*20)+'px';
+  w.innerHTML='<div class="win-head"><span>🔍 '+title+'</span><button id="c'+winCnt+'" class="close-x">✕</button><button id="cmp'+winCnt+'" style="margin-left:auto">⚖️ 對照</button><button id="star'+winCnt+'">⭐ 加入試題庫</button></div>'+
+    '<div class="win-tools" id="wt'+winCnt+'">'+
+      '<button class="tool wt-edit">✏️ 編輯</button><button class="tool wt-undo">↶</button><button class="tool wt-redo">↷</button><button class="tool wt-b">B</button><button class="tool wt-i">I</button><button class="tool wt-sup">x²</button><button class="tool wt-sub">x₂</button>'+
+      '<span class="hl-btn wt-fc" data-c="#e11d48" style="background:#e11d48"></span><span class="hl-btn wt-fc" data-c="#f97316" style="background:#f97316"></span><span class="hl-btn wt-fc" data-c="#22c55e" style="background:#22c55e"></span><span class="hl-btn wt-fc" data-c="#2563eb" style="background:#2563eb"></span><span class="hl-btn wt-fc" data-c="#111827" style="background:#111827"></span>'+
+      '<input type="color" class="wt-color" value="#e11d48"><button class="tool wt-hl">🖊️ 螢光筆</button>'+
+      '<span class="hl-btn wt-hlc" data-c="#ffe58a" style="background:#ffe58a"></span><span class="hl-btn wt-hlc" data-c="#a5d3ff" style="background:#a5d3ff"></span><span class="hl-btn wt-hlc" data-c="#a7e0a7" style="background:#a7e0a7"></span><span class="hl-btn wt-hlc" data-c="#ff9d9d" style="background:#ff9d9d"></span><span class="hl-btn wt-hlc" data-c="#ffb3d1" style="background:#ffb3d1"></span>'+
+      '<button class="tool wt-eraser">🧽 橡皮擦</button><button class="tool wt-img">🖼️ 圖片</button>'+
+      '<button class="tool wt-za">A+</button><button class="tool wt-zb">A-</button></div>'+
+    '<div class="win-body" id="wb'+winCnt+'">'+leftHtml+'</div>';
+  document.body.appendChild(w);
+  addWinResize(w);
+  const body=w.querySelector('.win-body');
+  const st={w:w,src:src,dual:false,right:null,hlOn:false,erOn:false,editOn:false};
+  const getTarget=()=>st.dual?st.right:body;
+  const sync=()=>{
+    clearTimeout(w._t);
+    w._t=setTimeout(()=>{
+      if(st.dual)syncWinCompare(src,getTarget().innerHTML);
+      else syncWinSingle(src,getTarget().innerHTML);
+    },1200);
+  };
+  const setTarget=()=>{
+    const t=getTarget();
+    if(t)t.contentEditable=st.editOn?'true':'false';
+  };
+  $('c'+winCnt).onclick=()=>w.remove();
+  const head=w.querySelector('.win-head');
+  let sx=0,sy=0,ox=0,oy=0,drag=false;
+  head.addEventListener('pointerdown',function(e){
+    if(e.target.tagName==='BUTTON')return;
+    drag=true;
+    sx=e.clientX;
+    sy=e.clientY;
+    const r=w.getBoundingClientRect();
+    ox=r.left;
+    oy=r.top;
+    e.preventDefault();
+  });
+  document.addEventListener('pointermove',e=>{
+    if(!drag)return;
+    w.style.left=(ox+e.clientX-sx)+'px';
+    w.style.top=(oy+e.clientY-sy)+'px';
+  });
+  document.addEventListener('pointerup',()=>drag=false);
+  $('cmp'+winCnt).onclick=()=>{
+    if(w.classList.contains('dual')){
+      w.classList.remove('dual');
+      st.dual=false;
+      body.innerHTML=leftHtml;
+      st.right=null;
+      setTarget();
+      convertDocToExamStyle(body);
+      enhanceSimilarLinks(body);
+      return;
+    }
+    w.classList.add('dual');
+    st.dual=true;
+    body.innerHTML='<div class="win-side-heads">'+
+      '<div class="win-side-label">📖 原始詳解</div><div class="win-side-label">📝 我的筆記</div></div>'+
+      '<div class="win-cols"><div class="win-left">'+leftHtml+'</div>'+
+      '<div class="win-right"><div class="win-right-body" contenteditable="'+(st.editOn?'true':'false')+'">'+rightHtml+'</div></div></div>';
+    st.right=body.querySelector('.win-right-body');
+    enhanceSimilarLinks(st.right);
+    convertDocToExamStyle(st.right);
+    setTarget();
+    body.querySelector('.win-left').addEventListener('input',()=>sync());
+    body.querySelector('.win-right-body').addEventListener('input',()=>sync());
+  };
+  $('star'+winCnt).onclick=async()=>{
+    await addToLib(src.subject,src.label,src.file,src.num);
+    showToast('⭐ 已加入試題庫：'+src.label+' 第'+src.num+'題');
+  };
+  const tools=w.querySelector('.win-tools');
+  tools.querySelector('.wt-edit').onclick=()=>{
+    st.editOn=!st.editOn;
+    setTarget();
+    showToast(st.editOn?'✏️ 已進入編輯（在此視窗做筆記）':'已離開編輯');
+  };
+  tools.querySelector('.wt-undo').onclick=()=>{
+    getTarget().focus();
+    document.execCommand('undo');
+    sync();
+  };
+  tools.querySelector('.wt-redo').onclick=()=>{
+    getTarget().focus();
+    document.execCommand('redo');
+    sync();
+  };
+  [['wt-b','bold'],['wt-i','italic'],['wt-sup','superscript'],['wt-sub','subscript']].forEach(p=>{
+    tools.querySelector('.'+p[0]).addEventListener('mousedown',e=>e.preventDefault());
+    tools.querySelector('.'+p[0]).onclick=()=>{
+      if(!st.editOn){
+        st.editOn=true;
+        setTarget();
+      }
+      getTarget().focus();
+      document.execCommand('styleWithCSS',false,true);
+      document.execCommand(p[1],false,null);
+      sync();
+    };
+  });
+  tools.querySelectorAll('.wt-fc').forEach(b=>{
+    b.addEventListener('mousedown',e=>e.preventDefault());
+    b.onclick=()=>{
+      if(!st.editOn){
+        st.editOn=true;
+        setTarget();
+      }
+      getTarget().focus();
+      document.execCommand('styleWithCSS',false,true);
+      document.execCommand('foreColor',false,b.dataset.c);
+      sync();
+    };
+  });
+  tools.querySelector('.wt-color').addEventListener('mousedown',e=>e.preventDefault());
+  tools.querySelector('.wt-color').onchange=e=>{
+    if(!st.editOn){
+      st.editOn=true;
+      setTarget();
+    }
+    getTarget().focus();
+    document.execCommand('styleWithCSS',false,true);
+    document.execCommand('foreColor',false,e.target.value);
+    sync();
+  };
+  tools.querySelector('.wt-hl').onclick=()=>{
+    st.hlOn=!st.hlOn;
+    getTarget().classList.toggle('hl-mode',st.hlOn);
+    tools.querySelector('.wt-hl').classList.toggle('on',st.hlOn);
+    if(st.hlOn){
+      st.erOn=false;
+      tools.querySelector('.wt-eraser').classList.remove('on');
+    }
+  };
+  tools.querySelectorAll('.wt-hlc').forEach(b=>{
+    b.addEventListener('mousedown',e=>e.preventDefault());
+    b.onclick=()=>{
+      hlColor=b.dataset.c;
+      if(!st.hlOn){
+        st.hlOn=true;
+        getTarget().classList.add('hl-mode');
+        tools.querySelector('.wt-hl').classList.add('on');
+      }
+    };
+  });
+  body.addEventListener('mouseup',()=>{
+    if(!st.hlOn)return;
+    setTimeout(()=>{
+      const sel=window.getSelection();
+      if(sel&&sel.rangeCount&&!sel.isCollapsed){
+        getTarget().focus();
+        try{
+          document.execCommand('styleWithCSS',false,true);
+          document.execCommand('hiliteColor',false,hlColor);
+          sel.removeAllRanges();
+          sync();
+        }catch(e){}
+      }
+    },10);
+  });
+  tools.querySelector('.wt-eraser').onclick=()=>{
+    st.erOn=!st.erOn;
+    tools.querySelector('.wt-eraser').classList.toggle('on',st.erOn);
+    if(st.erOn){
+      st.hlOn=false;
+      getTarget().classList.remove('hl-mode');
+      tools.querySelector('.wt-hl').classList.remove('on');
+    }
+  };
+  body.addEventListener('click',e=>{
+    if(!st.erOn)return;
+    const t=e.target;
+    if(t&&t.style&&t.style.backgroundColor){
+      t.style.backgroundColor='';
+      sync();
+    }
+  });
+  tools.querySelector('.wt-img').onclick=()=>{
+    winRightTarget=getTarget();
+    $('imgInputWin').click();
+  };
+  tools.querySelector('.wt-za').addEventListener('mousedown',e=>e.preventDefault());
+  tools.querySelector('.wt-za').onclick=()=>{
+    if(!st.editOn){
+      st.editOn=true;
+      setTarget();
+    }
+    const r=fontSel(getTarget(),2);
+    if(r){
+      sync();
+      showToast('已將選字改為 '+r.size+'px');
+    }
+  };
+  tools.querySelector('.wt-zb').addEventListener('mousedown',e=>e.preventDefault());
+  tools.querySelector('.wt-zb').onclick=()=>{
+    if(!st.editOn){
+      st.editOn=true;
+      setTarget();
+    }
+    const r=fontSel(getTarget(),-2);
+    if(r){
+      sync();
+      showToast('已將選字改為 '+r.size+'px');
+    }
+  };
+  convertDocToExamStyle(body);
+  enhanceSimilarLinks(body);
+}
+$('imgInputWin').addEventListener('change',e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const el=winRightTarget;
+    if(!el)return;
+    const im=document.createElement('img');
+    im.src=String(rd.result);
+    im.style.maxWidth='70%';
+    el.appendChild(im);
+    el.dispatchEvent(new Event('input'));
+    showToast('🖼️ 已插入圖片（自動同步）');
+  };
+  rd.readAsDataURL(f);
+  e.target.value='';
+});
+async function syncWinCompare(src,html){
+  if(!src||src.type!=='q')return;
+  const n=await api('/api/notes',{key:src.subject+'/'+src.label});
+  let text=(n.data&&n.data.text)?n.data.text:'';
+  text=replaceQInText(text,src.num,html);
+  const saved=(n.data&&n.data.saved)?n.data.saved:[];
+  await api('/api/save_notes',{key:src.subject+'/'+src.label,data:{text:text,saved:saved}});
+  if(current&&current.subject===src.subject&&current.label===src.label){
+    notes.text=text;
+    notes.saved=saved;
+  }
+  const styleTxt='.answer{color:#cc0000;font-weight:bold}.solution,.know,.sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:14px;margin:10px 0}.know{background:#E3F2FD;border-color:#2196F3}.sim{background:#E8F5E9;border-color:#4CAF50}table{border-collapse:collapse;width:100%;margin:10px 0}th{background:#FFF3CD;border:1px solid #bbb;padding:8px}td{border:1px solid #bbb;padding:8px;vertical-align:top}img{max-width:100%}h2{color:#333;border-left:5px solid #cc0000;padding-left:10px}.saveQ{display:none}';
+  const full='<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><title>'+src.subject+' '+src.label+'</title><style>'+styleTxt+'</style></head><body>'+text+'</body></html>';
+  await api('/api/save_paper',{key:src.subject+' '+src.label,html:full});
+  const card=findLibCard(src.subject+'/'+src.label,src.num);
+  if(card){
+    card.querySelector('.libq-body').innerHTML=html;
+    enhanceSimilarLinks(card.querySelector('.libq-body'));
+    markDirty(card);
+  }
+  showToast('📝 視窗內筆記已同步（筆記＋另存試卷＋試題庫）');
+}
+async function syncWinSingle(src,html){
+  if(!src||src.type!=='q')return;
+  const n=await api('/api/notes',{key:src.subject+'/'+src.label});
+  let text=(n.data&&n.data.text)?n.data.text:'';
+  text=replaceQInText(text,src.num,html);
+  const saved=(n.data&&n.data.saved)?n.data.saved:[];
+  await api('/api/save_notes',{key:src.subject+'/'+src.label,data:{text:text,saved:saved}});
+  if(current&&current.subject===src.subject&&current.label===src.label){
+    notes.text=text;
+    notes.saved=saved;
+  }
+  const styleTxt='.answer{color:#cc0000;font-weight:bold}.solution,.know,.sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:14px;margin:10px 0}.know{background:#E3F2FD;border-color:#2196F3}.sim{background:#E8F5E9;border-color:#4CAF50}table{border-collapse:collapse;width:100%;margin:10px 0}th{background:#FFF3CD;border:1px solid #bbb;padding:8px}td{border:1px solid #bbb;padding:8px;vertical-align:top}img{max-width:100%}h2{color:#333;border-left:5px solid #cc0000;padding-left:10px}.saveQ{display:none}';
+  const full='<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><title>'+src.subject+' '+src.label+'</title><style>'+styleTxt+'</style></head><body>'+text+'</body></html>';
+  await api('/api/save_paper',{key:src.subject+' '+src.label,html:full});
+  const card=findLibCard(src.subject+'/'+src.label,src.num);
+  if(card){
+    card.querySelector('.libq-body').innerHTML=html;
+    enhanceSimilarLinks(card.querySelector('.libq-body'));
+    markDirty(card);
+  }
+  showToast('📝 視窗內筆記已同步（筆記＋另存試卷＋試題庫）');
+}
+function setActiveLibCard(card){
+  activeLibCard=card;
+  if(card){
+    libBody.querySelectorAll('.libq').forEach(c=>c.style.outline='');
+    card.style.outline='2px solid #4f8cff';
+  }
+}
+function activeLibBody(){
+  return activeLibCard?activeLibCard.querySelector('.libq-body'):null;
+}
+function execLibFmt(cmd,val){
+  const b=activeLibBody();
+  if(!b){
+    showToast('請先點擊展開的題目');
+    return;
+  }
+  b.focus();
+  try{
+    document.execCommand('styleWithCSS',false,true);
+    document.execCommand(cmd,false,val||null);
+  }catch(e){}
+  if(activeLibCard)markDirty(activeLibCard);
+}
+async function openLib(){
+  stopEditState();
+  stopNoteMemory();
+  clearImgUI();
+  hideViewButtons();
+  libViewCtx=null;
+  activeLibCard=null;
+  hideQnav();
+  exam.style.display='none';
+  const r=await api('/api/library');
+  const data=r.data||{subjects:[]};
+  home.style.display='none';
+  view.style.display='none';
+  lib.style.display='flex';
+  $('libTools').style.display='none';
+  crumb.textContent='⭐ 我的試題庫';
+  showLibHome(data);
+}
+function showLibHome(data){
+  const box=libBody;
+  box.innerHTML='';
+  const top=document.createElement('div');
+  top.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px';
+  const totalBtn=document.createElement('button');
+  totalBtn.className='primary';
+  totalBtn.textContent='📄 輸出全部 PDF';
+  totalBtn.onclick=()=>exportLibraryPDF(data.subjects);
+  const allView=document.createElement('button');
+  allView.className='tool';
+  allView.textContent='📖 全部展開閱讀';
+  allView.onclick=()=>libView(data.subjects,null,'');
+  top.appendChild(totalBtn);
+  top.appendChild(allView);
+  box.appendChild(top);
+  const names=(DB.subjects||[]).map(x=>x.name);
+  const useNames=names.length?names:(data.subjects.map(s=>s.name));
+  const cards=document.createElement('div');
+  cards.className='cards';
+  cards.style.marginTop='14px';
+  useNames.forEach(name=>{
+    const sub=data.subjects.find(s=>s.name===name)||{name:name,items:[]};
+    const d=document.createElement('div');
+    d.className='scard';
+    d.innerHTML='<div class="icon">📘</div><div class="name">'+sub.name+'</div><div class="cnt">'+sub.items.length+' 題</div>';
+    const pdfBtn=document.createElement('button');
+    pdfBtn.className='tool';
+    pdfBtn.textContent='📄 輸出 PDF';
+    pdfBtn.onclick=e=>{
+      e.stopPropagation();
+      exportLibSub(sub.name);
+    };
+    d.appendChild(pdfBtn);
+    const allBtn=document.createElement('button');
+    allBtn.className='tool';
+    allBtn.textContent='📖 展開全部';
+    allBtn.onclick=e=>{
+      e.stopPropagation();
+      libView(data.subjects,sub.name,'');
+    };
+    d.appendChild(allBtn);
+    d.onclick=()=>showLibRounds(data,sub.name);
+    cards.appendChild(d);
+  });
+  box.appendChild(cards);
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回首頁';
+  back.style.marginTop='16px';
+  back.onclick=goHome;
+  box.appendChild(back);
+}
+function showLibRounds(data,subjectName){
+  const box=libBody;
+  box.innerHTML='';
+  const sub=data.subjects.find(s=>s.name===subjectName)||{name:subjectName,items:[]};
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回科目';
+  back.onclick=()=>showLibHome(data);
+  const title=document.createElement('h2');
+  title.style.cssText='color:#fff;margin:14px 0';
+  title.textContent='📘 '+subjectName;
+  const byLabel={};
+  sub.items.forEach(it=>{
+    if(!byLabel[it.label])byLabel[it.label]=[];
+    byLabel[it.label].push(it);
+  });
+  const rounds=document.createElement('div');
+  rounds.className='rounds';
+  Object.keys(byLabel).sort().forEach(label=>{
+    const b=document.createElement('div');
+    b.className='rbtn';
+    b.textContent=label+'('+byLabel[label].length+' 題)';
+    const allBtn=document.createElement('button');
+    allBtn.className='tool';
+    allBtn.textContent='📖 展開全部';
+    allBtn.onclick=e=>{
+      e.stopPropagation();
+      libView(data.subjects,subjectName,label);
+    };
+    b.appendChild(allBtn);
+    b.onclick=()=>showLibQuestions(data,subjectName,label);
+    rounds.appendChild(b);
+  });
+  box.appendChild(back);
+  box.appendChild(title);
+  box.appendChild(rounds);
+}
+function showLibQuestions(data,subjectName,label){
+  const box=libBody;
+  box.innerHTML='';
+  const sub=data.subjects.find(s=>s.name===subjectName)||{name:subjectName,items:[]};
+  const items=sub.items.filter(it=>it.label===label);
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回年分';
+  back.onclick=()=>showLibRounds(data,subjectName);
+  const title=document.createElement('h2');
+  title.style.cssText='color:#fff;margin:14px 0';
+  title.textContent='📁 '+label+' ('+items.length+' 題)';
+  const headRow=document.createElement('div');
+  headRow.style.cssText='display:flex;align-items:center;gap:10px;margin:14px 0';
+  const allBtn=document.createElement('button');
+  allBtn.className='tool';
+  allBtn.textContent='📖 展開全部';
+  allBtn.onclick=()=>libView(data.subjects,subjectName,label);
+  headRow.appendChild(title);
+  headRow.appendChild(allBtn);
+  box.appendChild(back);
+  box.appendChild(headRow);
+  items.forEach(it=>{
+    const d=document.createElement('div');
+    d.className='litem';
+    d.innerHTML='<span class="tag">第'+it.num+'題</span>';
+    const exp=document.createElement('button');
+    exp.textContent='📖 展開';
+    exp.onclick=()=>showSingleLibQ(sub,it,data.subjects);
+    const del=document.createElement('button');
+    del.textContent='🗑️ 刪除';
+    del.onclick=async()=>{
+      await removeLibItem(sub.name,it.label,it.num);
+    };
+    d.appendChild(exp);
+    d.appendChild(del);
+    box.appendChild(d);
+  });
+}
+async function showSingleLibQ(sub,it,subjects){
+  const box=libBody;
+  const old=document.getElementById('singleQBox');
+  if(old)old.remove();
+  const wrap=document.createElement('div');
+  wrap.id='singleQBox';
+  const n=await api('/api/notes',{key:sub.name+'/'+it.label});
+  const origQ=await api('/api/question',{file:it.file,num:it.num});
+  let frag='';
+  if(n.data&&n.data.text)frag=extractQFromText(n.data.text,it.num);
+  if(!frag&&origQ.ok)frag=origQ.html;
+  if(!frag){
+    showToast('載入失敗');
+    return;
+  }
+  const card=document.createElement('div');
+  card.className='libq';
+  card.dataset.key=sub.name+'/'+it.label;
+  card.dataset.file=it.file;
+  card.dataset.num=it.num;
+  card.innerHTML='<div class="libq-head"><span>【'+sub.name+' / '+it.label+' / 第'+it.num+'題】</span><span class="dirty">✏️已改</span><button class="sqCmp">⚖️ 對照</button><button class="sqDel">🗑️ 刪除</button><button class="sqClose close-x">✕ 收起</button></div><div class="libq-body">'+frag+'</div>';
+  card.querySelector('.sqClose').onclick=()=>{
+    card.remove();
+    if(!libBody.querySelector('.libq')){
+      $('libTools').style.display='none';
+      activeLibCard=null;
+    }
+  };
+  card.querySelector('.sqDel').onclick=async()=>{
+    await removeLibItem(sub.name,it.label,it.num);
+    card.remove();
+    if(!libBody.querySelector('.libq')){
+      $('libTools').style.display='none';
+      activeLibCard=null;
+    }
+  };
+  card.querySelector('.sqCmp').onclick=()=>showComparePair('【'+sub.name+' / '+it.label+' / 第'+it.num+'題】對照',origQ.ok?origQ.html:'',card.querySelector('.libq-body').innerHTML,{type:'q',subject:sub.name,label:it.label,file:it.file,num:it.num});
+  card.querySelector('.libq-body').addEventListener('input',()=>markDirty(card));
+  enhanceSimilarLinks(card.querySelector('.libq-body'));
+  convertDocToExamStyle(card.querySelector('.libq-body'));
+  box.insertBefore(wrap,box.firstChild);
+  wrap.appendChild(card);
+  $('libTools').style.display='flex';
+  setActiveLibCard(card);
+  wrap.scrollIntoView({behavior:'smooth',block:'start'});
+  showToast('📖 已單獨展開：第'+it.num+'題');
+}
+$('btnBackRoundsLib').onclick=()=>{
+  if(libViewCtx&&libViewCtx.subjectName){
+    const s=(DB.subjects||[]).find(x=>x.name===libViewCtx.subjectName);
+    if(s)goBackToRounds(s);
+  }else openLib();
+};
+function extractQFromText(text,num){
+  const m=text.match(new RegExp('<h2[^>]*>\\s*第\\s*'+num+'\\s*[題题]','i'));
+  if(!m)return '';
+  const from=m.index;
+  let to=text.length;
+  const nxt=text.slice(from+6).search(/<h2[^>]*>\s*第\s*\d{1,3}\s*[題题]/i);
+  if(nxt!==-1)to=from+6+nxt;
+  return text.slice(from,to).replace(/<label[^>]*class="saveQ"[\s\S]*?<\/label>/g,'');
+}
+async function libView(subjects,subjectName,labelName){
+  libViewCtx={subjects:subjects,subjectName:subjectName,labelName:labelName||''};
+  libDirty=new Map();
+  clearImgUI();
+  setHlMode(false,true);
+  setEraser(false,true);
+  setHlModeLib(false,true);
+  setEraserLib(false,true);
+  $('libTools').style.display='flex';
+  crumb.textContent=(labelName?subjectName+' '+labelName:subjectName||'全部')+' 試題庫｜展開閱讀';
+  const box=libBody;
+  box.innerHTML='<div style="margin:12px 40px;display:flex;gap:8px"><button class="tool" id="btnBackLib">← 回清單</button><button class="primary" id="btnLibPDF">📄 輸出 PDF</button><span style="color:#9aa0b0;font-size:12px;align-self:center">顯示先前筆記版；修改自動同步回該回筆記與另存試卷</span></div>';
+  document.getElementById('btnBackLib').onclick=openLib;
+  const wrap=document.createElement('div');
+  wrap.className='libview';
+  const list=subjects.filter(s=>!subjectName||s.name===subjectName);
+  for(const sub of list){
+    for(const it of sub.items){
+      if(labelName&&it.label!==labelName)continue;
+      const n=await api('/api/notes',{key:sub.name+'/'+it.label});
+      const origQ=await api('/api/question',{file:it.file,num:it.num});
+      let frag='';
+      if(n.data&&n.data.text)frag=extractQFromText(n.data.text,it.num);
+      if(!frag&&origQ.ok)frag=origQ.html;
+      if(!frag)continue;
+      const card=document.createElement('div');
+      card.className='libq';
+      card.dataset.key=sub.name+'/'+it.label;
+      card.dataset.file=it.file;
+      card.dataset.num=it.num;
+      card.innerHTML='<div class="libq-head"><span>【'+sub.name+' / '+it.label+' / 第'+it.num+'題】</span><span class="dirty">✏️已改</span><button data-act="cmp">⚖️ 對照</button><button data-act="del">🗑️ 刪除</button></div><div class="libq-body">'+frag+'</div>';
+      card.querySelector('button[data-act="cmp"]').onclick=()=>showComparePair('【'+sub.name+' / '+it.label+' / 第'+it.num+'題】對照',origQ.ok?origQ.html:'',card.querySelector('.libq-body').innerHTML,{type:'q',subject:sub.name,label:it.label,file:it.file,num:it.num});
+      card.querySelector('button[data-act="del"]').onclick=async()=>{
+        await removeLibItem(sub.name,it.label,it.num);
+        libView(subjects,subjectName,labelName);
+      };
+      card.addEventListener('mousedown',()=>setActiveLibCard(card));
+      enhanceSimilarLinks(card.querySelector('.libq-body'));
+  convertDocToExamStyle(card.querySelector('.libq-body'));
+      card.querySelector('.libq-body').addEventListener('input',()=>markDirty(card));
+      wrap.appendChild(card);
+    }
+  }
+  box.appendChild(wrap);
+  document.getElementById('btnLibPDF').onclick=()=>{
+    const parts=[];
+    wrap.querySelectorAll('.libq').forEach(c=>{
+      const head=c.querySelector('.libq-head span').textContent;
+      parts.push('<div style="border:2px solid #2563eb;border-radius:10px;padding:14px;margin:14px 0"><h3 style="color:#1d4ed8">'+head+'</h3>'+c.querySelector('.libq-body').innerHTML+'</div>');
+    });
+    printPDF(parts.join('\n'),subjectName?subjectName+' 試題庫':'全部試題庫');
+  };
+}
+function markDirty(card){
+  libDirty.set(card.dataset.key,card);
+  card.querySelector('.dirty').style.display='inline';
+  clearTimeout(autoTimerLib);
+  autoTimerLib=setTimeout(()=>syncLibCards(),1200);
+  showToast('✏️ 已修改，1.2 秒後自動同步');
+}
+async function syncLibCards(){
+  const done=new Set();
+  for(const [key,card] of libDirty){
+    if(done.has(key))continue;
+    done.add(key);
+    const seg=key.split('/');
+    if(seg.length<2)continue;
+    const n=await api('/api/notes',{key:key});
+    let text=(n.data&&n.data.text)?n.data.text:'';
+    const num=parseInt(card.dataset.num);
+    const inner=card.querySelector('.libq-body').innerHTML;
+    text=replaceQInText(text,num,inner);
+    const saved=(n.data&&n.data.saved)?n.data.saved:[];
+    await api('/api/save_notes',{key:key,data:{text:text,saved:saved}});
+    const styleTxt='.answer{color:#cc0000;font-weight:bold}.solution,.know,.sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:14px;margin:10px 0}.know{background:#E3F2FD;border-color:#2196F3}.sim{background:#E8F5E9;border-color:#4CAF50}table{border-collapse:collapse;width:100%;margin:10px 0}th{background:#FFF3CD;border:1px solid #bbb;padding:8px}td{border:1px solid #bbb;padding:8px;vertical-align:top}img{max-width:100%}h2{color:#333;border-left:5px solid #cc0000;padding-left:10px}.saveQ{display:none}';
+    const full='<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><title>'+seg[0]+' '+seg[1]+'</title><style>'+styleTxt+'</style></head><body>'+text+'</body></html>';
+    await api('/api/save_paper',{key:seg[0]+' '+seg[1],html:full});
+    card.querySelector('.dirty').style.display='none';
+    libDirty.delete(key);
+  }
+  showToast('💾 試題庫修改已同步（筆記＋另存試卷）');
+}
+function setHlModeLib(on,silent){
+  hlDirectLib=on;
+  lib.classList.toggle('hl-mode',on);
+  $('btnHlToggleLib').classList.toggle('on',on);
+  if(on){
+    setEraserLib(false,true);
+  }
+  if(!silent) showToast(on?'🖊️ 螢光筆：拖曳劃過文字上色':'已結束');
+}
+$('btnHlToggleLib').onclick=()=>{
+  if(!editModeLib){
+    showToast('請先點擊「✏️ 編輯」再使用螢光筆');
+    return;
+  }
+  setHlModeLib(!hlDirectLib);
+};
+document.querySelectorAll('#libTools .hl-btn[data-c="#ffe58a"],#libTools .hl-btn[data-c="#a5d3ff"],#libTools .hl-btn[data-c="#a7e0a7"],#libTools .hl-btn[data-c="#ff9d9d"],#libTools .hl-btn[data-c="#ffb3d1"]').forEach(b=>{
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.onclick=()=>{
+    hlColor=b.dataset.c;
+    if(!editModeLib){
+      showToast('請先點擊「✏️ 編輯」再使用螢光筆');
+      return;
+    }
+    if(!hlDirectLib)setHlModeLib(true);
+  };
+});
+libBody.addEventListener('mouseup',()=>{
+  if(!hlDirectLib)return;
+  setTimeout(()=>{
+    const sel=window.getSelection();
+    if(sel&&sel.rangeCount&&!sel.isCollapsed){
+      const b=activeLibBody();
+      if(b)b.focus();
+      else libBody.focus();
+      try{
+        document.execCommand('styleWithCSS',false,true);
+        document.execCommand('hiliteColor',false,hlColor);
+        sel.removeAllRanges();
+        try{cleanupEmptySpans(libBody);}catch(e){}
+        const node=sel.anchorNode||sel.getRangeAt(0).startContainer;
+        const card=node&&node.nodeType===1?node.closest('.libq'):(node&&node.parentElement?node.parentElement.closest('.libq'):null);
+        if(card)markDirty(card);
+      }catch(e){}
+    }
+  },10);
+});
+function setEraserLib(on,silent){
+  if(eraserModeLib===on&&!silent)return;
+  eraserModeLib=on;
+  $('btnEraserLib').classList.toggle('on',on);
+  if(on)setHlModeLib(false,true);
+  if(!silent) showToast(on?'🧽 橡皮擦：點一下螢光筆標記即消除':'已結束');
+}
+$('btnEraserLib').onclick=()=>{
+  if(!editModeLib){
+    showToast('請先點擊「✏️ 編輯」再使用橡皮擦');
+    return;
+  }
+  setEraserLib(!eraserModeLib);
+};
+libBody.addEventListener('click',e=>{
+  if(!eraserModeLib)return;
+  const t=e.target;
+  if(t&&t.style&&t.style.backgroundColor){
+    t.style.backgroundColor='';
+    const card=t.closest('.libq');
+    if(card)markDirty(card);
+    showToast('🧽 已消除該螢光筆標記');
+  }
+});
+$('btnEditLib').onclick=()=>{
+  editModeLib=!editModeLib;
+  libBody.querySelectorAll('.libq-body').forEach(b=>b.contentEditable=editModeLib?'true':'false');
+  $('btnEditLib').classList.toggle('on',editModeLib);
+  showToast(editModeLib?'✏️ 編輯模式：可直接改字（自動同步）':'已離開編輯');
+};
+document.getElementById('btnBoldLib').onclick=()=>execLibFmt('bold');
+document.getElementById('btnItalicLib').onclick=()=>execLibFmt('italic');
+document.getElementById('btnSupLib').onclick=()=>execLibFmt('superscript');
+document.getElementById('btnSubLib').onclick=()=>execLibFmt('subscript');
+document.querySelectorAll('#libTools .hl-btn[data-fc]').forEach(b=>{
+  b.addEventListener('mousedown',e=>e.preventDefault());
+  b.addEventListener('click',()=>execLibFmt('foreColor',b.dataset.fc));
+});
+document.getElementById('txtColorLib').addEventListener('change',e=>execLibFmt('foreColor',e.target.value));
+$('btnImageLib').onclick=()=>{
+  if(!editModeLib){
+    showToast('請先點擊「✏️ 編輯」再插入圖片');
+    return;
+  }
+  $('imgInputLib').click();
+};
+$('imgInputLib').addEventListener('change',e=>{
+  const f=e.target.files[0];
+  if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    const targetBody=activeLibCard?activeLibCard.querySelector('.libq-body'):libBody.querySelector('.libq-body');
+    if(!targetBody){
+      showToast('請先展開題目');
+      return;
+    }
+    const im=document.createElement('img');
+    im.src=String(rd.result);
+    im.style.maxWidth='70%';
+    targetBody.appendChild(im);
+    if(activeLibCard)markDirty(activeLibCard);
+    showToast('🖼️ 圖片已加到題目（自動同步）');
+  };
+  rd.readAsDataURL(f);
+  e.target.value='';
+});
+function setLibFont(){
+  libBody.querySelectorAll('.libq-body').forEach(b=>{
+    b.style.fontSize=libDocFont+'px';
+    b.style.lineHeight='1.85';
+  });
+}
+async function addToLib(subject,label,file,num){
+  const r=await api('/api/library');
+  const data=r.data||{subjects:[]};
+  let sub=data.subjects.find(s=>s.name===subject);
+  if(!sub){
+    sub={name:subject,items:[]};
+    data.subjects.push(sub);
+  }
+  if(!sub.items.some(i=>i.label===label&&i.num===num)){
+    sub.items.push({label,file,num});
+    await api('/api/save_library',{data});
+  }
+  if(current&&current.subject===subject&&current.label===label){
+    const cb=docEl.querySelector('.saveQ input[data-q="'+num+'"]');
+    if(cb)cb.checked=true;
+  }
+  syncLibToCheckboxes();
+}
+async function removeLibItem(subject,label,num){
+  const r=await api('/api/library');
+  const data=r.data||{subjects:[]};
+  const sub=data.subjects.find(s=>s.name===subject);
+  if(sub){
+    sub.items=sub.items.filter(i=>!(i.label===label&&i.num===num));
+    if(!sub.items.length)data.subjects=data.subjects.filter(s=>s.name!==subject);
+  }
+  await api('/api/save_library',{data});
+  const curLabel=current?(current.origLabel||current.label):'';
+  if(current&&current.subject===subject&&curLabel===label){
+    const cb=docEl.querySelector('.saveQ input[data-q="'+num+'"]');
+    if(cb){
+      cb.checked=false;
+    }
+    if(notes.saved)notes.saved=notes.saved.filter(n=>n!==num);
+    scheduleAutoSave();
+  }
+  syncLibToCheckboxes();
+  showToast('🗑️ 已刪除');
+  openLib();
+}
+async function removeLibItemSilent(subject,label,num){
+  const r=await api('/api/library');
+  const data=r.data||{subjects:[]};
+  const sub=data.subjects.find(s=>s.name===subject);
+  if(sub){
+    sub.items=sub.items.filter(i=>!(i.label===label&&i.num===num));
+    if(!sub.items.length)data.subjects=data.subjects.filter(s=>s.name!==subject);
+  }
+  await api('/api/save_library',{data});
+  syncLibToCheckboxes();
+}
+async function exportLibSub(subjectName){
+  const r=await api('/api/library');
+  const data=r.data||{subjects:[]};
+  const sub=data.subjects.find(s=>s.name===subjectName);
+  if(!sub||!sub.items.length){
+    showToast('此科目沒有收藏題目');
+    return;
+  }
+  const parts=[];
+  for(const it of sub.items){
+    const n=await api('/api/notes',{key:sub.name+'/'+it.label});
+    let frag='';
+    if(n.data&&n.data.text)frag=extractQFromText(n.data.text,it.num);
+    if(!frag){
+      const q=await api('/api/question',{file:it.file,num:it.num});
+      if(q.ok)frag=q.html;
+    }
+    if(frag)parts.push('<div style="border:2px solid #2563eb;border-radius:10px;padding:14px;margin:14px 0"><h3 style="color:#1d4ed8">【'+subjectName+' / '+it.label+' / 第'+it.num+'題】</h3>'+frag+'</div>');
+  }
+  printPDF(parts.join('\n'),subjectName+' 試題庫');
+}
+async function exportLibraryPDF(subjects){
+  const parts=[];
+  for(const sub of subjects){
+    for(const it of sub.items){
+      const n=await api('/api/notes',{key:sub.name+'/'+it.label});
+      let frag='';
+      if(n.data&&n.data.text)frag=extractQFromText(n.data.text,it.num);
+      if(!frag){
+        const q=await api('/api/question',{file:it.file,num:it.num});
+        if(q.ok)frag=q.html;
+      }
+      if(frag)parts.push('<div style="border:2px solid #2563eb;border-radius:10px;padding:14px;margin:14px 0"><h3 style="color:#1d4ed8">【'+sub.name+' / '+it.label+' / 第'+it.num+'題】</h3>'+frag+'</div>');
+    }
+  }
+  printPDF(parts.join('\n'),'全部試題庫');
+}
+function printPDF(bodyHtml,title){
+  const full='<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><title>'+title+'</title>'+
+    '<style>@page{size:A4;margin:15mm}body{font-family:"Microsoft JhengHei","Noto Sans TC",sans-serif;color:#111;line-height:1.8}'+
+    '*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}'+
+    'h1{color:#333;border-bottom:3px solid #999;padding-bottom:8px}'+
+    'h2{color:#333;border-left:5px solid #cc0000;padding-left:10px;margin-top:38px}'+
+    '.answer{color:#cc0000;font-weight:bold}'+
+    '.solution,.know,.sim{background:#f5f5f5 !important;border:1.5px solid #999;border-radius:8px;padding:14px;margin:10px 0}'+
+    '.know{background:#E3F2FD !important;border-color:#2196F3}'+
+    '.sim{background:#E8F5E9 !important;border-color:#4CAF50}'+
+    'table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14.5px}'+
+    'th{background:#FFF3CD;border:1px solid #bbb;padding:8px}'+
+    'td{border:1px solid #bbb;padding:8px;vertical-align:top}'+
+    'img{max-width:100%}.saveQ{display:none}</style></head><body><h1>'+title+'</h1>'+bodyHtml+'</body></html>';
+  try{
+    const iframe=document.createElement('iframe');
+    iframe.style.position='fixed';
+    iframe.style.right='0';
+    iframe.style.bottom='0';
+    iframe.style.width='1px';
+    iframe.style.height='1px';
+    iframe.style.border='0';
+    iframe.style.opacity='0';
+    iframe.title=title;
+    document.body.appendChild(iframe);
+    const doc=iframe.contentDocument||iframe.contentWindow.document;
+    doc.open();
+    doc.write(full);
+    doc.close();
+    doc.title=title;
+    setTimeout(()=>{
+      try{
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+      }catch(e){
+        showToast('列印失敗，請改用「另存試卷」HTML 檔在瀏覽器列印');
+      }
+      const idoc=iframe.contentDocument||iframe.contentWindow.document;
+      const cleanup=()=>{
+        try{iframe.remove();}catch(e){}
+      };
+      if(idoc&&idoc.addEventListener){
+        idoc.addEventListener('afterprint',cleanup,{once:true});
+        setTimeout(cleanup,8000);
+      }else{
+        setTimeout(cleanup,3000);
+      }
+    },400);
+  }catch(e){
+    showToast('列印失敗，請改用「另存試卷」HTML 檔在瀏覽器列印');
+  }
+}
+function stripDupTitle(html,title){
+  const t=String(title||'').trim();
+  const re=/<h[12][^>]*>[\s\S]*?<\/h[12]>/gi;
+  return html.replace(re,function(m){
+    let txt=m.replace(/<label[^>]*class="saveQ"[\s\S]*?<\/label>/gi,'');
+    txt=txt.replace(/<[^>]+>/g,'').replace(/&nbsp;|&#160;/g,' ').replace(/\s+/g,' ').trim();
+    if(txt===t) return '';
+    return m;
+  });
+}
+$('btnPDF').onclick=async()=>{
+  if(!current)return;
+  saveNotes();
+  const data=collectNotes();
+  let body=data.text.replace(/<style[\s\S]*?<\/style>/g,'').replace(/<script[\s\S]*?<\/script>/g,'');
+  const subj=current.origSubject||current.subject;
+  const lab=current.origLabel||current.label;
+  const t=subj+' '+lab;
+  body=stripDupTitle(body,t);
+  printPDF(body,t);
+};
+docEl.addEventListener('change',e=>{
+  const cb=e.target.closest('.saveQ input');
+  if(cb&&current){
+    const num=parseInt(cb.dataset.q);
+    const subject=current.origSubject||current.subject;
+    const label=current.origLabel||current.label;
+    const file=current.origFile||current.file;
+    if(cb.checked){
+      addToLib(subject,label,file,num);
+      showToast('⭐ 已加入試題庫：第'+num+'題');
+    }else{
+      removeLibItemSilent(subject,label,num);
+      showToast('已取消收藏：第'+num+'題');
+    }
+    scheduleAutoSave();
+  }
+});
+document.addEventListener('click',function(e){
+  const b=e.target&&e.target.closest?e.target.closest('#btnBackRounds'):null;
+  if(!b)return;
+  e.preventDefault();
+  if(examCtx&&examCtx.mode==='take'){
+    openExam();
+    return;
+  }
+  if(current&&current.isExam&&current.origLabel){
+    (async()=>{
+      const r=await api('/api/exams');
+      const data=r.data||{subjects:[]};
+      const sub=data.subjects.find(s=>s.name===current.origSubject);
+      const lb=sub&&sub.labels.find(l=>l.label===current.origLabel);
+      stopEditState();
+      stopNoteMemory();
+      clearImgUI();
+      hideViewButtons();
+      libViewCtx=null;
+      activeLibCard=null;
+      hideQnav();
+      home.style.display='none';
+      view.style.display='none';
+      lib.style.display='none';
+      exam.style.display='flex';
+      crumb.textContent='📝 考試區';
+      if(sub&&lb)showExamAttempts(data,sub.name,lb);
+      else showExamLabels(data,current.origSubject);
+    })();
+    return;
+  }
+  if(!current){
+    showToast('請先開啟一回');
+    return;
+  }
+  const s=(DB.subjects||[]).find(x=>x.name===current.subject);
+  if(s)goBackToRounds(s);
+},true);
+$('btnHome').onclick=goHome;
+$('btnLib').onclick=openLib;
+
+function cnNum(n){
+  const d=['零','一','二','三','四','五','六','七','八','九'];
+  n=parseInt(n)||0;
+  if(n<10)return d[n];
+  if(n===10)return '十';
+  if(n<20)return '十'+d[n%10];
+  if(n<100)return d[Math.floor(n/10)]+'十'+(n%10?d[n%10]:'');
+  return String(n);
+}
+function nowStr(){
+  return new Date().toLocaleString('zh-TW',{hour12:false});
+}
+async function openExam(){
+  stopEditState();
+  stopNoteMemory();
+  clearImgUI();
+  hideViewButtons();
+  libViewCtx=null;
+  activeLibCard=null;
+  hideQnav();
+  home.style.display='none';
+  view.style.display='none';
+  lib.style.display='none';
+  exam.style.display='flex';
+  crumb.textContent='📝 考試區';
+  showExamHome();
+}
+function showExamHome(){
+  const box=examBody;
+  box.innerHTML='';
+  const wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:18px;text-align:center';
+  const h=document.createElement('h2');
+  h.style.cssText='color:#fff;margin:0 0 8px;font-size:24px';
+  h.textContent='📝 考試區';
+  wrap.appendChild(h);
+  const row=document.createElement('div');
+  row.style.cssText='display:flex;gap:18px;justify-content:center;flex-wrap:wrap';
+  const btnW=document.createElement('button');
+  btnW.className='primary';
+  btnW.style.cssText='font-size:17px;padding:12px 32px;width:220px';
+  btnW.textContent='✍️ 寫考題';
+  btnW.onclick=showExamSubjects;
+  const btnD=document.createElement('button');
+  btnD.className='green';
+  btnD.style.cssText='font-size:17px;padding:12px 32px;width:220px';
+  btnD.textContent='📂 已寫過試卷';
+  btnD.onclick=async()=>{
+    const r=await api('/api/exams');
+    showExamDone(r.data||{subjects:[]});
+  };
+  const btnH=document.createElement('button');
+  btnH.className='tool';
+  btnH.textContent='🏠 回首頁';
+  btnH.onclick=goHome;
+  row.appendChild(btnW);
+  row.appendChild(btnD);
+  const homeWrap=document.createElement('div');
+  homeWrap.style.cssText='margin-top:6px';
+  homeWrap.appendChild(btnH);
+  wrap.appendChild(row);
+  wrap.appendChild(homeWrap);
+  box.appendChild(wrap);
+}
+function showExamSubjects(){
+  const box=examBody;
+  box.innerHTML='';
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回考試區';
+  back.onclick=openExam;
+  const h=document.createElement('h2');
+  h.style.cssText='color:#fff;margin:14px 0';
+  h.textContent='✍️ 選擇要寫哪份考卷（科目）';
+  box.appendChild(back);
+  box.appendChild(h);
+  const cards=document.createElement('div');
+  cards.className='cards';
+  DB.subjects.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='scard';
+    d.innerHTML='<div class="icon">📘</div><div class="name">'+s.name+'</div><div class="cnt">'+s.rounds.length+' 回</div>';
+    d.onclick=()=>showExamRounds(s);
+    cards.appendChild(d);
+  });
+  box.appendChild(cards);
+}
+function showExamRounds(s){
+  const box=examBody;
+  box.innerHTML='';
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回科目';
+  back.onclick=showExamSubjects;
+  const h=document.createElement('h2');
+  h.style.cssText='color:#fff;margin:14px 0';
+  h.textContent='📘 '+s.name+'｜選擇年分場次';
+  box.appendChild(back);
+  box.appendChild(h);
+  const cards=document.createElement('div');
+  cards.className='cards';
+  s.rounds.forEach(rd=>{
+    const d=document.createElement('div');
+    d.className='scard';
+    d.innerHTML='<div class="icon">📅</div><div class="name">'+rd.label+'</div>';
+    const btn=document.createElement('button');
+    btn.className='tool';
+    btn.textContent='✍️ 開始作答';
+    btn.onclick=e=>{
+      e.stopPropagation();
+      startExam(s.name,rd);
+    };
+    d.appendChild(btn);
+    d.onclick=()=>startExam(s.name,rd);
+    cards.appendChild(d);
+  });
+  box.appendChild(cards);
+}
+async function startExam(subject,rd){
+  stopEditState();
+  const r=await api('/api/round',{file:rd.file});
+  if(!r.ok){
+    showToast('載入失敗');
+    return;
+  }
+  const draft=await api('/api/exam_load',{key:subject+'/'+rd.label+'/草稿'});
+  const savedAnswers=(draft.ok&&draft.data&&draft.data.draft)?(draft.data.answers||{}):{};
+  const doc=new DOMParser().parseFromString(r.html,'text/html');
+  const body=doc.body;
+  const h2s=Array.from(body.querySelectorAll('h2'));
+  const qs=[];
+  h2s.forEach((h)=>{
+    const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(!m)return;
+    const num=parseInt(m[1]);
+    const chunk=document.createElement('div');
+    chunk.appendChild(h.cloneNode(true));
+    let sib=h.nextSibling;
+    while(sib){
+      if(sib.nodeType===1&&sib.tagName==='H2')break;
+      if(sib.nodeType===3){
+        sib=sib.nextSibling;
+        continue;
+      }
+      chunk.appendChild(sib.cloneNode(true));
+      sib=sib.nextSibling;
+    }
+    const pOpt=chunk.querySelector('.options')||Array.from(chunk.querySelectorAll('p,div')).find(e=>/^[A-D][.、]/i.test((e.textContent||'').trim()));
+    const options=[];
+    if(pOpt){
+      const raw=(pOpt.textContent||'').replace(/\s+/g,' ').trim();
+      const segs=raw.split(/(?=[A-D][.、])/).map(s=>s.trim()).filter(Boolean);
+      segs.forEach(seg=>{
+        const om=seg.match(/^([A-D])[.、]\s*(.+)$/);
+        if(om)options.push({label:om[1],text:om[2]});
+      });
+    }
+    const am=(chunk.textContent||'').match(/答案[:：]\s*([A-D])/i);
+    qs.push({num:num,title:h.textContent,options:options,answer:am?am[1]:'',detailHtml:chunk.innerHTML});
+  });
+  examCtx={mode:'take',subject:subject,label:rd.label,file:rd.file,answers:savedAnswers,qs:qs};
+  examWrong.clear();
+  docEl.innerHTML=renderExamHTML();
+  docEl.contentEditable='false';
+  setExamTakeUI(true);
+  home.style.display='none';
+  lib.style.display='none';
+  exam.style.display='none';
+  view.style.display='flex';
+  crumb.textContent='✍️ 作答中：'+subject+' ｜ '+rd.label+(draft.ok&&draft.data&&draft.data.draft?'（已載入草稿）':'');
+  buildQnav();
+  docWrap.scrollTop=0;
+  showToast(draft.ok&&draft.data&&draft.data.draft?'📝 已載入未完成草稿':'✍️ 開始作答（自動存草稿）');
+}
+function renderExamHTML(){
+  return '<div class="exam-head">📋 '+examCtx.subject+'｜'+examCtx.label+'｜共 '+examCtx.qs.length+' 題｜作答中自動存草稿；送出後自動批改</div>'+
+    examCtx.qs.map(q=>{
+      const ans=examCtx.answers[q.num]||'';
+      const opts=q.options.length?q.options.map(o=>'<label class="exam-radio"><input type="radio" name="q'+q.num+'" data-q="'+q.num+'" value="'+o.label+'" '+(ans===o.label?'checked':'')+'> '+o.label+'. '+o.text+'</label>').join(''):'<p class="options">（此題無選項資料，請打開詳解查看）</p>';
+      return '<h2>'+q.title+'</h2><div class="options">'+opts+'</div>';
+    }).join('');
+}
+function setExamTakeUI(on){
+  ['btnEdit','btnUndo','btnRedo','btnBold','btnItalic','btnSup','btnSub','btnHlToggle','btnEraser','btnImage','btnZoomIn','btnZoomOut','btnViewIn','btnViewOut','txtColor'].forEach(id=>{
+    const el=$(id);
+    if(el)el.style.display=on?'none':'';
+  });
+  document.querySelectorAll('#viewTop .hl-btn').forEach(b=>b.style.display=on?'none':'');
+  $('btnSubmitExam').style.display=on?'':'none';
+  $('btnBackRounds').textContent=on?'← 返回考試區':'← 上頁';
+  if(on){
+    hideViewButtons();
+  }else{
+    showViewButtons();
+  }
+}
+function scheduleExamDraft(){
+  if(!examCtx||examCtx.mode!=='take')return;
+  clearTimeout(examDraftTimer);
+  examDraftTimer=setTimeout(async()=>{
+    await api('/api/exam_save',{key:examCtx.subject+'/'+examCtx.label+'/草稿',data:{time:nowStr(),draft:true,file:examCtx.file,answers:examCtx.answers}});
+    showToast('💾 草稿已自動儲存');
+  },900);
+}
+docEl.addEventListener('change',e=>{
+  if(!examCtx||examCtx.mode!=='take')return;
+  const rb=e.target.closest('input[type=radio][data-q]');
+  if(!rb)return;
+  examCtx.answers[parseInt(rb.dataset.q)]=rb.value;
+  scheduleExamDraft();
+});
+async function submitExam(){
+  if(!examCtx||examCtx.mode!=='take')return;
+  if(!confirm('確定送出並批改？'))return;
+  const qs=examCtx.qs;
+  const total=qs.length;
+  let correct=0;
+  const wrong=[];
+  qs.forEach(q=>{
+    const a=examCtx.answers[q.num]||'';
+    if(a===q.answer)correct++;
+    else wrong.push(q.num);
+  });
+  const score=Math.round(correct*1.25*100)/100;
+  const ex=await api('/api/exams');
+  const data=ex.data||{subjects:[]};
+  const sub=data.subjects.find(s=>s.name===examCtx.subject);
+  const lab=sub&&sub.labels.find(l=>l.label===examCtx.label);
+  const n=lab?lab.attempts.filter(a=>!a.draft).length+1:1;
+  const attemptName=cnNum(n)+'次做題';
+  const key=examCtx.subject+'/'+examCtx.label+'/'+attemptName;
+  const html=qs.map(q=>{
+    const ans=examCtx.answers[q.num]||'';
+    const okm=ans===q.answer?'✅':'❌';
+    const opts=q.options.map(o=>'<label class="exam-radio"><input type="radio" '+(ans===o.label?'checked':'')+' disabled> '+o.label+'. '+o.text+'</label>').join('');
+    const detail=(q.detailHtml||'').replace(/<h2[\s\S]*?<\/h2>/i,'').replace(/<p class="options">[\s\S]*?<\/p>/i,'').replace(/<p class="answer">[\s\S]*?<\/p>/i,'');
+    return '<h2>'+q.title+'</h2><div class="options">'+opts+'</div><p class="answer">'+okm+' 正確答案：'+q.answer+'｜你的答案：'+(ans||'未作答')+'</p>'+detail;
+  }).join('');
+  await api('/api/exam_save',{key:key,data:{time:nowStr(),score:score,total:total,correct:correct,wrong:wrong,answers:examCtx.answers,file:examCtx.file,html:html,draft:false}});
+  await api('/api/exam_delete',{key:examCtx.subject+'/'+examCtx.label+'/草稿'});
+  showToast('📤 已送出並跳轉到已寫過試卷');
+  await openExamRecord(examCtx.subject,examCtx.label,attemptName);
+}
+$('btnSubmitExam').onclick=submitExam;
+function parseOptionsFromChunk(chunk){
+  const pOpt=chunk.querySelector('.options')||Array.from(chunk.querySelectorAll('p,div')).find(e=>/^[A-D][.、]/i.test((e.textContent||'').trim()));
+  const options=[];
+  if(pOpt){
+    const raw=(pOpt.textContent||'').replace(/\s+/g,' ').trim();
+    const segs=raw.split(/(?=[A-D][.、])/).map(s=>s.trim()).filter(Boolean);
+    segs.forEach(seg=>{
+      const om=seg.match(/^([A-D])[.、]\s*(.+)$/);
+      if(om)options.push({label:om[1],text:om[2]});
+    });
+  }
+  return options;
+}
+function buildExamRecordHTML(origText,rec){
+  const pd=new DOMParser().parseFromString('<!DOCTYPE html><html><body>'+origText+'</body></html>','text/html');
+  const body=pd.body;
+  const score=(rec.score!==undefined&&rec.score!==null)?('分數：'+rec.score+' ／ 100'):'未完成';
+  let praise='';
+  if(rec.score!==undefined&&rec.score!==null){
+    if(rec.score>=80){
+      praise='🔥 太強了吧！國考矇眼都能過！';
+    }else if(rec.score>=60){
+      praise='🎉 你好棒！繼續保持!';
+    }else if(rec.score>=40){
+      praise='💪 加油！再努力一點點！';
+    }else{
+      praise='📖 要乖乖念書喔！';
+    }
+  }
+   let html='<div class="exam-record-score" style="background:#fff8e1;border:2px solid #f5b301;border-radius:10px;padding:12px 16px;margin:12px 0;font-size:17px;font-weight:700;color:#7a5200;line-height:1.8">🏅 <span style="color:#cc0000">'+score+'</span> ｜ 答對 <span style="color:#cc0000">'+(rec.correct!==undefined?rec.correct:0)+'</span> / <span style="color:#cc0000">'+(rec.total!==undefined?rec.total:0)+'</span> 題'+(rec.time?' ｜ 作答時間：<span style="color:#7a5200">'+rec.time+'</span>':'')+(praise?' ｜ <span style="color:#cc0000">'+praise+'</span>':'')+'</div>';
+  body.querySelectorAll('h2').forEach(h=>{
+    const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(!m)return;
+    const num=parseInt(m[1]);
+    const chunk=document.createElement('div');
+    const hc=h.cloneNode(true);
+    hc.querySelectorAll('.saveQ').forEach(el=>el.remove());
+    chunk.appendChild(hc);
+    let sib=h.nextSibling;
+    while(sib){
+      if(sib.nodeType===1&&sib.tagName==='H2')break;
+      if(sib.nodeType===3){
+        sib=sib.nextSibling;
+        continue;
+      }
+      chunk.appendChild(sib.cloneNode(true));
+      sib=sib.nextSibling;
+    }
+    const am=(chunk.textContent||'').match(/答案[:：]\s*([A-D])/i);
+    const correct=am?am[1]:'';
+    const options=parseOptionsFromChunk(chunk);
+    chunk.querySelectorAll('.options').forEach(o=>o.remove());
+    chunk.querySelectorAll('.answer').forEach(a=>a.remove());
+    const ans=(rec.answers&&rec.answers[num])||'';
+      const optDiv=document.createElement('div');
+    optDiv.className='options exam-style';
+    optDiv.setAttribute('contenteditable','false');
+    if(options.length){
+      optDiv.innerHTML=options.map(o=>'<div class="exam-opt'+(ans===o.label?' is-ans':'')+'">'+o.label+'. '+o.text+'</div>').join('');
+    }else{
+      optDiv.innerHTML='<div class="exam-opt">（此題無選項資料）</div>';
+    }
+    chunk.insertBefore(optDiv,hc.nextSibling);
+    const line=document.createElement('p');
+    line.className='answer';
+    line.textContent=(ans&&ans===correct?'✅ ':'❌ ')+'正確答案：'+(correct||'?')+'｜你的答案：'+(ans||'未作答');
+    optDiv.after(line);
+    html+=chunk.innerHTML;
+  });
+  return html;
+}
+async function loadOriginalDocForExam(subject,label,file){
+  const n=await api('/api/notes',{key:subject+'/'+label});
+  if(n.data&&n.data.text&&n.data.text.trim())return{text:n.data.text,file:file||''};
+  let origFile=file;
+  if(!origFile){
+    const cands=labelMap[label]||[];
+    const c=cands.find(x=>x.subject===subject);
+    if(c)origFile=c.file;
+  }
+  const r=await api('/api/round',{file:origFile});
+  if(r.ok&&r.html)return{text:r.html,file:origFile};
+  return{text:'',file:origFile||''};
+}
+/* ═══════ 詳解筆記修改 → 同步到「同份考卷所有作答」 ═══════ */
+async function syncChangedToAllExams(subject,label){
+  if(!subject||!label)return;
+  const ex=await api('/api/exams');
+  const exData=ex.data||{subjects:[]};
+  const sub=exData.subjects.find(s=>s.name===subject);
+  const lab=sub&&sub.labels.find(l=>l.label===label);
+  if(!lab)return;
+  const n=await api('/api/notes',{key:subject+'/'+label});
+  const base=(n.data&&n.data.text)?n.data.text:'';
+  if(!base)return;
+  const pd=new DOMParser().parseFromString(base,'text/html');
+  const b=pd.body;
+  const h2s=new Map();
+  b.querySelectorAll('h2').forEach(h=>{
+    const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(m)h2s.set(parseInt(m[1]),h);
+  });
+  for(const att of lab.attempts){
+    if(att.draft)continue;
+    const recKey=subject+'/'+label+'/'+att.name;
+    const rr=await api('/api/exam_load',{key:recKey});
+    if(!rr.ok||!rr.data||!rr.data.html)continue;
+    const rec=rr.data;
+    const pd3=new DOMParser().parseFromString(rec.html,'text/html');
+    const b3=pd3.body;
+    b3.querySelectorAll('h2').forEach(h=>{
+      const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+      if(!m)return;
+      const num=parseInt(m[1]);
+      const newQ=h2s.get(num);
+      if(!newQ)return;
+      const ndiv=document.createElement('div');
+      ndiv.appendChild(newQ.cloneNode(true));
+      let s2=newQ.nextSibling;
+      while(s2){
+        if(s2.nodeType===1&&s2.tagName==='H2')break;
+        if(s2.nodeType===3){
+          s2=s2.nextSibling;
+          continue;
+        }
+        ndiv.appendChild(s2.cloneNode(true));
+        s2=s2.nextSibling;
+      }
+      ['solution','know','sim'].forEach(cls=>{
+        const ob=h.querySelector('.'+cls);
+        const nb=ndiv.querySelector('.'+cls);
+        if(nb&&ob&&ob.innerHTML!==nb.innerHTML){
+          ob.innerHTML=nb.innerHTML;
+        }else if(nb&&!ob){
+          const ne=document.createElement('div');
+          ne.className=cls;
+          ne.innerHTML=nb.innerHTML;
+          h.after(ne);
+        }else if(!nb&&ob){
+          ob.remove();
+        }
+      });
+    });
+    await api('/api/exam_save',{key:recKey,data:{...rec,html:b3.innerHTML}});
+  }
+  showToast('💾 詳解筆記已同步到同份考卷所有作答');
+}
+async function syncExamRecordToOriginal(){
+  if(!current||!current.isExam||!current.origLabel)return;
+  const subject=current.origSubject||current.subject;
+  const label=current.origLabel||current.label;
+  const n=await api('/api/notes',{key:subject+'/'+label});
+  let base=(n.data&&n.data.text)?n.data.text:'';
+  if(!base){
+    if(!current.origFile)return;
+    const rd=await api('/api/round',{file:current.origFile});
+    if(!rd.ok||!rd.html)return;
+    base=rd.html;
+  }
+  const pd=new DOMParser().parseFromString(base,'text/html');
+  const body=pd.body;
+  const origH2s=new Map();
+  body.querySelectorAll('h2').forEach(h=>{
+    const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(m)origH2s.set(parseInt(m[1]),h);
+  });
+  const examChunks=new Map();
+  docEl.querySelectorAll('h2').forEach(h=>{
+    const m=h.textContent.match(/第\s*(\d{1,3})\s*[題题]/);
+    if(!m)return;
+    const num=parseInt(m[1]);
+    const c=document.createElement('div');
+    c.appendChild(h.cloneNode(true));
+    let s=h.nextSibling;
+    while(s){
+      if(s.nodeType===1&&s.tagName==='H2')break;
+      if(s.nodeType===3){
+        s=s.nextSibling;
+        continue;
+      }
+      c.appendChild(s.cloneNode(true));
+      s=s.nextSibling;
+    }
+    examChunks.set(num,c);
+  });
+  let changed=false;
+  for(const [num,ech] of examChunks){
+    const oh=origH2s.get(num);
+    if(!oh)continue;
+    const och=document.createElement('div');
+    och.appendChild(oh.cloneNode(true));
+    let s=oh.nextSibling;
+    while(s){
+      if(s.nodeType===1&&s.tagName==='H2')break;
+      if(s.nodeType===3){
+        s=s.nextSibling;
+        continue;
+      }
+      och.appendChild(s.cloneNode(true));
+      s=s.nextSibling;
+    }
+    let qChanged=false;
+    ['solution','know','sim'].forEach(cls=>{
+      const eb=ech.querySelector('.'+cls);
+      const ob=och.querySelector('.'+cls);
+      if(eb&&ob&&ob.innerHTML!==eb.innerHTML){
+        ob.innerHTML=eb.innerHTML;
+        qChanged=true;
+      }else if(eb&&!ob){
+        const ne=document.createElement('div');
+        ne.className=cls;
+        ne.innerHTML=eb.innerHTML;
+        och.appendChild(ne);
+        qChanged=true;
+      }else if(!eb&&ob){
+        ob.remove();
+        qChanged=true;
+      }
+    });
+    if(qChanged){
+      const nodes=[];
+      let nn=oh.nextSibling;
+      while(nn&&!(nn.nodeType===1&&nn.tagName==='H2')){
+        nodes.push(nn);
+        nn=nn.nextSibling;
+      }
+      nodes.forEach(nd=>nd.remove());
+      const frag=document.createDocumentFragment();
+      Array.from(och.childNodes).forEach(c=>frag.appendChild(c.cloneNode(true)));
+      oh.replaceWith(frag);
+      changed=true;
+    }
+  }
+  if(!changed)return;
+  const newText=body.innerHTML;
+  const saved=savedArr().slice();
+  await api('/api/save_notes',{key:subject+'/'+label,data:{text:newText,saved:saved}});
+  const styleTxt='.answer{color:#cc0000;font-weight:bold}.solution,.know,.sim{background:#f5f5f5;border:1.5px solid #999;border-radius:8px;padding:14px;margin:10px 0}.know{background:#E3F2FD;border-color:#2196F3}.sim{background:#E8F5E9;border-color:#4CAF50}table{border-collapse:collapse;width:100%;margin:10px 0}th{background:#FFF3CD;border:1px solid #bbb;padding:8px}td{border:1px solid #bbb;padding:8px;vertical-align:top}img{max-width:100%}h2{color:#333;border-left:5px solid #cc0000;padding-left:10px}.saveQ{display:none}';
+  const full='<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><title>'+subject+' '+label+'</title><style>'+styleTxt+'</style></head><body>'+newText+'</body></html>';
+  await api('/api/save_paper',{key:subject+' '+label,html:full});
+  await syncChangedToAllExams(subject,label);
+  showToast('💾 已同步回詳解＋同份考卷所有作答');
+}
+async function openExamRecord(subject,label,attempt){
+  stopEditState();
+  const key=subject+'/'+label+'/'+attempt;
+  const r=await api('/api/exam_load',{key:key});
+  if(!r.ok){
+    showToast('載入失敗');
+    return;
+  }
+  const rec=r.data||{};
+  const orig=await loadOriginalDocForExam(subject,label,rec.file||'');
+  examCtx=null;
+  examWrong=new Set(rec.wrong||[]);
+  current={subject:subject,label:label+'｜'+attempt,file:orig.file||rec.file||'',isExam:true,examKey:key,origSubject:subject,origLabel:label,origFile:orig.file||rec.file||''};
+  notes={};
+  docEl.innerHTML=buildExamRecordHTML(orig.text,rec);
+  injectSaveButtons();
+  enhanceSimilarLinks();
+  buildQnav();
+  buildSideNav();
+  cleanupEmptyTableParts(docEl);
+  syncLibToCheckboxes();
+  setExamTakeUI(false);
+  home.style.display='none';
+  lib.style.display='none';
+  exam.style.display='none';
+  view.style.display='flex';
+  crumb.textContent=subject+' ｜ '+label+' ｜ '+attempt;
+  showViewButtons();
+  resetNoteHistory();
+  noteSnapNow();
+  setHlMode(false,true);
+  setEraser(false,true);
+  docWrap.scrollTop=0;
+  showToast('📝 已開啟寫過試卷（分數置頂、筆記與詳解雙向同步）');
+}
+async function showExamDone(data){
+  const box=examBody;
+  box.innerHTML='';
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回考試區';
+  back.onclick=openExam;
+  const h=document.createElement('h2');
+  h.style.cssText='color:#fff;margin:14px 0';
+  h.textContent='📂 已寫過試卷（科目）';
+  box.appendChild(back);
+  box.appendChild(h);
+  if(!data.subjects.length){
+    const p=document.createElement('p');
+    p.style.cssText='color:#9aa0b0';
+    p.textContent='還沒有寫過任何試卷';
+    box.appendChild(p);
+    return;
+  }
+  const cards=document.createElement('div');
+  cards.className='cards';
+  data.subjects.forEach(s=>{
+    const d=document.createElement('div');
+    d.className='scard';
+    d.innerHTML='<div class="icon">📘</div><div class="name">'+s.name+'</div><div class="cnt">'+s.labels.length+' 個年分</div>';
+    d.onclick=()=>showExamLabels(data,s.name);
+    cards.appendChild(d);
+  });
+  box.appendChild(cards);
+  const statBtn=document.createElement('button');
+  statBtn.className='tool';
+  statBtn.textContent='📊 各科成績統計';
+  statBtn.style.cssText='display:block;margin:18px auto 0;width:240px;font-size:15px;padding:10px 0;font-weight:700;text-align:center;border-radius:10px;background:#f59e0b;border-color:#f59e0b;color:#111827;box-shadow:0 4px 12px rgba(245,158,11,.35)';
+  statBtn.onclick=()=>showStatsView(data);
+  box.appendChild(statBtn);
+}
+const STAT_COLORS=['#4f8cff','#39d98a','#f97316','#a855f7','#e11d48','#14b8a6','#eab308','#ec4899','#8b5cf6','#0ea5e9'];
+function statColor(name,names){
+  const i=names.indexOf(name);
+  return STAT_COLORS[(i<0?0:i)%STAT_COLORS.length];
+}
+function cnNumToNum(name){
+  const m=name.match(/^([一二三四五六七八九十]+)次/);
+  if(!m)return 0;
+  const s=m[1];
+  const map={'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9};
+  if(s==='十')return 10;
+  if(s.length===1)return map[s]||0;
+  if(s[0]==='十')return 10+(map[s[1]]||0);
+  if(s[1]==='十')return (map[s[0]]||0)*10+(s.length>2?(map[s[2]]||0):0);
+  return 0;
+}
+function shortAttempt(name){
+  const m=name.match(/^([一二三四五六七八九十]+)次做題$/);
+  if(!m)return name;
+  const map={'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9,'十':10};
+  return (map[m[1]]||m[1])+'次';
+}
+function showStatsView(data){
+  statsData=data;
+  const box=examBody;
+  box.innerHTML='';
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回已寫過試卷';
+  back.onclick=()=>showExamDone(data);
+  const pdfBtn=document.createElement('button');
+  pdfBtn.className='tool';
+  pdfBtn.textContent='📄 輸出 PDF';
+  pdfBtn.style.cssText='padding:6px 14px;font-size:14px;font-weight:700';
+  pdfBtn.onclick=exportStatsPDF;
+  const toolbar=document.createElement('div');
+  toolbar.style.cssText='display:flex;justify-content:center;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 4px';
+  toolbar.appendChild(back);
+  toolbar.appendChild(pdfBtn);
+  box.appendChild(toolbar);
+  const h=document.createElement('h2');
+  h.style.cssText='color:#fff;margin:0 0 6px;text-align:center';
+  h.textContent='📊 各科成績統計';
+  box.appendChild(h);
+  const note=document.createElement('p');
+  note.style.cssText='color:#9aa0b0;font-size:13px;margin:0 0 14px;text-align:center';
+  note.textContent='各科合併顯示（顏色區分）；同一年分多次作答取最高分；X 軸：年分｜Y 軸：分數（0～100）｜滑鼠移近資料點看詳細';
+  box.appendChild(note);
+  const map=new Map();
+  (data.subjects||[]).forEach(s=>{
+    (s.labels||[]).forEach(lb=>{
+      let best=null;
+      (lb.attempts||[]).forEach(a=>{
+        if(a.name==='草稿')return;
+        if(a.score===undefined||a.score===null)return;
+        if(!best||a.score>best.score)best={score:a.score,attempt:a.name};
+      });
+      if(best)map.set(s.name+'|'+lb.label,{subject:s.name,label:lb.label,score:best.score,attempt:best.attempt});
+    });
+  });
+  if(!map.size){
+    const p=document.createElement('p');
+    p.style.cssText='color:#9aa0b0';
+    p.textContent='還沒有寫過正式試卷';
+    box.appendChild(p);
+    return;
+  }
+  const names=[...new Set([...map.values()].map(p=>p.subject))].sort();
+  const labels=[...new Set([...map.values()].map(p=>p.label))].sort();
+  const legend=document.createElement('div');
+  legend.style.cssText='display:flex;flex-wrap:wrap;gap:14px;margin:4px 0 10px;justify-content:center';
+  names.forEach(n=>{
+    const item=document.createElement('span');
+    item.style.cssText='display:flex;align-items:center;gap:6px;font-size:13px;color:#dde3ee';
+    const dot=document.createElement('span');
+    dot.style.cssText='display:inline-block;width:12px;height:12px;border-radius:50%;background:'+statColor(n,names);
+    item.appendChild(dot);
+    item.appendChild(document.createTextNode(n));
+    legend.appendChild(item);
+  });
+  box.appendChild(legend);
+  /* ═══════ 各科平均 + 總平均 + 放射師證書 ═══════ */
+  const avgWrap=document.createElement('div');
+  avgWrap.style.cssText='display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 0 14px';
+  const avgInfo={};
+  names.forEach(n=>{
+    let sum=0,cnt=0;
+    map.forEach(p=>{
+      if(p.subject===n){
+        sum+=p.score;
+        cnt++;
+      }
+    });
+    if(cnt){
+      avgInfo[n]=Math.round(sum/cnt*100)/100;
+    }
+  });
+  const allScores=[];
+  names.forEach(n=>{
+    if(avgInfo[n]!==undefined)allScores.push(avgInfo[n]);
+  });
+  const totalAvg=allScores.length?(Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length*100)/100):null;
+  names.forEach(n=>{
+    if(avgInfo[n]===undefined)return;
+    const chip=document.createElement('div');
+    chip.style.cssText='background:#1e2330;border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:13px;color:#dde3ee;text-align:center';
+    chip.innerHTML='<div style="color:'+statColor(n,names)+';font-weight:700;font-size:14px">'+n+'</div><div style="margin-top:2px">平均 '+avgInfo[n]+'</div>';
+    avgWrap.appendChild(chip);
+  });
+  if(totalAvg!==null){
+    const tchip=document.createElement('div');
+    tchip.style.cssText='background:#0e9f6e;border:1px solid #39d98a;border-radius:10px;padding:8px 14px;font-size:14px;color:#fff;text-align:center;font-weight:700';
+    tchip.innerHTML='📊 總平均 '+totalAvg;
+    avgWrap.appendChild(tchip);
+  }
+  box.appendChild(avgWrap);
+  if(totalAvg!==null&&totalAvg>60){
+    const badge=document.createElement('div');
+    badge.style.cssText='text-align:center;margin:6px 0 14px;font-size:19px;font-weight:800;color:#39d98a;text-shadow:0 0 12px rgba(57,217,138,.45)';
+    badge.textContent='🎉 放射師證書 Get!!';
+    box.appendChild(badge);
+  }
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:relative;background:#fff;border-radius:12px;padding:8px;margin-bottom:20px';
+  const canvas=document.createElement('canvas');
+  canvas.style.cssText='width:100%;display:block';
+  const tip=document.createElement('div');
+  tip.style.cssText='position:absolute;pointer-events:none;background:rgba(17,24,39,.92);color:#fff;padding:6px 10px;border-radius:8px;font-size:12px;white-space:nowrap;z-index:10;display:none';
+  wrap.appendChild(canvas);
+  wrap.appendChild(tip);
+  box.appendChild(wrap);
+  const allPts=[];
+  map.forEach(p=>allPts.push(p));
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const mx=e.clientX-rect.left;
+    const my=e.clientY-rect.top;
+    let hit=null;
+    let hitD=16;
+    allPts.forEach(p=>{
+      const d=Math.hypot(p._x-mx,p._y-my);
+      if(d<hitD){
+        hitD=d;
+        hit=p;
+      }
+    });
+    if(hit){
+      tip.style.display='block';
+      tip.style.left=Math.min(hit._x+12,rect.width-140)+'px';
+      tip.style.top=Math.max(8,hit._y-34)+'px';
+      tip.textContent=hit.subject+'｜'+hit.label+'｜'+shortAttempt(hit.attempt)+'｜分數 '+hit.score;
+    }else tip.style.display='none';
+  });
+  canvas.addEventListener('mouseleave',()=>{
+    tip.style.display='none';
+  });
+  setTimeout(()=>drawAllStatsChart(canvas,map,names,labels),30);
+}
+function drawAllStatsChart(canvas,map,names,labels){
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.getBoundingClientRect();
+  const w=Math.max(rect.width,320);
+  const h=340;
+  canvas.width=w*dpr;
+  canvas.height=h*dpr;
+  canvas.style.width=w+'px';
+  canvas.style.height=h+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#fff';
+  ctx.fillRect(0,0,w,h);
+  const padL=46,padR=20,padT=26,padB=52;
+  const pw=w-padL-padR;
+  const ph=h-padT-padB;
+  ctx.font='12px "Microsoft JhengHei",sans-serif';
+  for(let v=0;v<=100;v+=20){
+    const y=padT+ph-(v/100)*ph;
+    ctx.strokeStyle='#e5e7eb';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(padL,y);
+    ctx.lineTo(w-padR,y);
+    ctx.stroke();
+    ctx.fillStyle='#6b7280';
+    ctx.textAlign='right';
+    ctx.textBaseline='middle';
+    ctx.fillText(String(v),padL-8,y);
+  }
+  /* ═══════ 60 分參考線（黑色粗線） ═══════ */
+  const y60=padT+ph-(60/100)*ph;
+  ctx.strokeStyle='#111827';
+  ctx.lineWidth=3.5;
+  ctx.beginPath();
+  ctx.moveTo(padL,y60);
+  ctx.lineTo(w-padR,y60);
+  ctx.stroke();
+  ctx.fillStyle='#111827';
+  ctx.textAlign='left';
+  ctx.textBaseline='middle';
+  ctx.font='bold 13px "Microsoft JhengHei",sans-serif';
+  ctx.fillText('60 分線',padL+6,y60-14);
+  const n=labels.length;
+  const xAt=i=>n>1?padL+(pw/(n-1))*i:padL+pw/2;
+  ctx.textAlign='center';
+  ctx.textBaseline='top';
+  labels.forEach((lb,i)=>{
+    ctx.fillStyle='#6b7280';
+    ctx.fillText(lb,xAt(i),padT+ph+8);
+  });
+  names.forEach(sn=>{
+    const color=statColor(sn,names);
+    const series=[];
+    map.forEach((p)=>{
+      if(p.subject!==sn)return;
+      const i=labels.indexOf(p.label);
+      const x=xAt(i);
+      const y=padT+ph-(Math.min(p.score,100)/100)*ph;
+      p._x=x;
+      p._y=y;
+      series.push({x:x,y:y,p:p});
+    });
+    series.sort((a,b)=>a.x-b.x);
+    ctx.strokeStyle=color;
+    ctx.lineWidth=2.5;
+    ctx.lineJoin='round';
+    ctx.beginPath();
+    series.forEach((pt,i)=>{
+      if(i===0)ctx.moveTo(pt.x,pt.y);
+      else ctx.lineTo(pt.x,pt.y);
+    });
+    ctx.stroke();
+    series.forEach(pt=>{
+      ctx.beginPath();
+      ctx.arc(pt.x,pt.y,5,0,Math.PI*2);
+      ctx.fillStyle=color;
+      ctx.fill();
+      ctx.strokeStyle='#fff';
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+    });
+  });
+}
+function exportStatsPDF(){
+  if(!statsData){
+    showToast('請先進入統計頁');
+    return;
+  }
+  const canvas=document.querySelector('#examBody canvas');
+  if(!canvas){
+    showToast('統計圖尚未準備完成');
+    return;
+  }
+  showToast('📄 正在輸出統計 PDF…');
+  const imgUrl=canvas.toDataURL('image/png');
+  const names=[...new Set([...(statsData.subjects||[])].map(s=>s.name))].sort();
+  const legendHtml=names.map(n=>{
+    return '<span style="display:inline-block;margin-right:12px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+statColor(n,names)+'"></span> '+n+'</span>';
+  }).join('');
+  const body='<div style="text-align:center;margin-bottom:10px">'+legendHtml+'</div><div style="text-align:center"><img src="'+imgUrl+'" style="max-width:100%"></div>';
+  printPDF(body,'放射師國考神器｜各科成績統計');
+}
+async function showExamLabels(data,subjectName){
+  const box=examBody;
+  box.innerHTML='';
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回科目';
+  back.onclick=()=>showExamDone(data);
+  const h=document.createElement('h2');
+  h.style.cssText='color:#fff;margin:14px 0';
+  h.textContent='📘 '+subjectName+'｜選擇年分';
+  box.appendChild(back);
+  box.appendChild(h);
+  const sub=data.subjects.find(s=>s.name===subjectName);
+  const cards=document.createElement('div');
+  cards.className='cards';
+  (sub?sub.labels:[]).forEach(lb=>{
+    const d=document.createElement('div');
+    d.className='scard';
+    d.innerHTML='<div class="icon">📅</div><div class="name">'+lb.label+'</div><div class="cnt">'+lb.attempts.length+' 次做題</div>';
+    d.onclick=()=>showExamAttempts(data,subjectName,lb);
+    cards.appendChild(d);
+  });
+  box.appendChild(cards);
+}
+function showExamAttempts(data,subjectName,labelObj){
+  const box=examBody;
+  box.innerHTML='';
+  const back=document.createElement('button');
+  back.className='tool';
+  back.textContent='← 回年分';
+  back.onclick=()=>showExamLabels(data,subjectName);
+  const h=document.createElement('h2');
+  h.style.cssText='color:#fff;margin:14px 0';
+  h.textContent='📁 '+subjectName+'｜'+labelObj.label;
+  box.appendChild(back);
+  box.appendChild(h);
+  const cards=document.createElement('div');
+  cards.className='cards';
+  labelObj.attempts.forEach(a=>{
+    const d=document.createElement('div');
+    d.className='scard';
+    const scoreTxt=(a.score!==undefined&&a.score!==null)?('分數 '+a.score):'未完成';
+    d.innerHTML='<div class="icon">📝</div><div class="name">'+a.name+'</div><div class="cnt">'+(a.time||'')+'<br>'+scoreTxt+'</div>';
+    const open=document.createElement('button');
+    open.className='tool';
+    open.textContent='📖 開啟';
+    open.onclick=e=>{
+      e.stopPropagation();
+      if(a.name==='草稿'){
+        const rd={label:labelObj.label,file:a.file||''};
+        startExam(subjectName,rd);
+      }else{
+        openExamRecord(subjectName,labelObj.label,a.name);
+      }
+    };
+    const del=document.createElement('button');
+    del.className='tool';
+    del.textContent='🗑️ 刪除';
+    del.onclick=async e=>{
+      e.stopPropagation();
+      if(!confirm('確定刪除這份『'+a.name+'』？'))return;
+      await api('/api/exam_delete',{key:subjectName+'/'+labelObj.label+'/'+a.name});
+      const r=await api('/api/exams');
+      showExamDone(r.data||{subjects:[]});
+    };
+    d.appendChild(open);
+    d.appendChild(del);
+    d.onclick=open.onclick;
+    cards.appendChild(d);
+  });
+  box.appendChild(cards);
+}
+$('btnExam').onclick=openExam;
+function showHelpModal(){
+  let hv=document.getElementById('helpModal');
+  if(hv)hv.remove();
+  hv=document.createElement('div');
+  hv.id='helpModal';
+  hv.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;display:flex;align-items:center;justify-content:center';
+  hv.innerHTML='<div style="background:#fff;color:#222;border-radius:14px;padding:22px;width:720px;max-width:94vw;max-height:86vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.5);font-size:14px;line-height:1.9">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+      '<div style="font-size:18px;font-weight:800">📖 放射師國考神器｜功能介紹</div>'+
+      '<button id="helpClose" class="close-x" style="padding:4px 12px">✕ 關閉</button></div>'+
+    '<ul style="padding-left:20px;margin:6px 0">'+
+      '<li><b>🔢 題號快速跳轉</b>：詳解閱讀時，工具列最右邊有「🔢 題號」按鈕，點開後可快速跳轉到指定題目。</li>'+
+      '<li><b>✏️ 編輯筆記</b>：按「✏️ 編輯文字」後可直接改字；支援粗體、斜體、上標、下標、文字顏色。</li>'+
+      '<li><b>A+ / A- 選取文字大小</b>：編輯模式下<b>選取文字</b>後按 A+ / A- 只改變選到的字；<b>沒選字</b>時按 A+ / A- 調整整篇文字大小。</li>'+
+      '<li><b>🖊️ 螢光筆</b>：編輯狀態下選顏色後拖曳劃過文字即上色（黃/藍/綠/紅/粉等）。</li>'+
+      '<li><b>🧽 橡皮擦</b>：點一下螢光筆標記即消除。</li>'+
+      '<li><b>🖼️ 插入圖片</b>：從電腦選圖或直接 <b>Ctrl+V</b> 貼上複製的圖片；可拖曳移動、縮放、旋轉、刪除。</li>'+
+      '<li><b>🔗 相似題型</b>：點擊年份題號（如「113年 第2次 第44題」或「112-1 第10題」）自動開啟<b>同科</b>相似題視窗，可相互比對。</li>'+
+      '<li><b>➕ 新增相似考題</b>：在相似題型欄點「➕ 新增相似考題」→ 填年份/次/題/自由備註 → 自動生成可點連結。</li>'+
+      '<li><b>⭐ 我的試題庫</b>：閱讀時勾選「儲存試題」收藏；可獨立輸出 PDF（含筆記）。</li>'+
+      '<li><b>📝 考試區</b>：首頁有「✍️ 寫考題」「📂 已寫過試卷」兩個按鈕；已寫過試卷頂部顯示分數，筆記與詳解雙向同步。</li>'+
+      '<li><b>📊 各科成績統計</b>：進入「📂 已寫過試卷」後，科目卡片下方有黃色「📊 各科成績統計」按鈕，可看六科合併折線圖並輸出 PDF。</li>'+
+      '<li><b>⚖️ 筆記/詳解對照</b>：閱讀頁按「⚖️ 筆記/詳解對照」左右並排原始詳解與你的筆記。</li>'+
+      '<li><b>📄 輸出 PDF</b>：可輸出詳解閱讀、試題庫、已寫過試卷、成績統計圖。方式為列印畫面，請選擇另存PDF。</li>'+
+      '<li><b>📂 更改筆記位置</b>：點常用工具列「📂 更改筆記位置」→ 選新資料夾 → 自動複製舊筆記/試卷/試題庫過去。</li>'+
+      '<li><b>💾 備份</b>：按「💾 匯出備份」可打包全部資料；「📥 匯入備份」還原。</li>'+
+      '<li><b>💾 自動儲存</b>：筆記修改後 <b>0.9 秒</b>自動保存。</li>'+
+      '<li><b>⌨️ 快捷鍵</b>：Ctrl+B/I/U 粗體/斜體/底線、Ctrl+Shift+= 上標、Ctrl+= 下標、Ctrl+] / Ctrl+[ 選字放大縮小、Ctrl+S 儲存。</li>'+
+    '</ul>'+
+    '<div style="color:#888;font-size:12px;margin-top:8px">提示：第一次使用會先跳出「選擇儲存位置」說明框，按「下一步」選資料夾即可。</div></div>';
+  document.body.appendChild(hv);
+  document.getElementById('helpClose').onclick=function(){
+    hv.remove();
+  };
+  hv.addEventListener('click',function(e){
+    if(e.target===hv)hv.remove();
+  });
+}
+$('btnHelp').onclick=showHelpModal;
+/* ═══════ 💾 備份：匯出 / 匯入 / 說明 / 提醒 ═══════ */
+function makeBkModal(title,innerHtml,btns){
+  let mv=document.getElementById('bkModal');
+  if(mv)mv.remove();
+  mv=document.createElement('div');
+  mv.id='bkModal';
+  mv.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:3000;display:flex;align-items:center;justify-content:center';
+  mv.innerHTML='<div style="background:#fff;color:#222;border-radius:14px;padding:20px;width:640px;max-width:94vw;max-height:86vh;overflow-y:auto;box-shadow:0 12px 40px rgba(0,0,0,.5);font-size:14px;line-height:1.9">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+      '<div style="font-size:17px;font-weight:800">'+title+'</div>'+
+      '<button class="close-x" id="bkClose" style="padding:4px 12px">✕ 關閉</button></div>'+innerHtml+btns+'</div>';
+  document.body.appendChild(mv);
+  document.getElementById('bkClose').onclick=function(){
+    mv.remove();
+  };
+  mv.addEventListener('click',function(e){
+    if(e.target===mv)mv.remove();
+  });
+  return mv;
+}
+async function exportBackup(){
+  showToast('⏳ 正在打包備份…');
+  try{
+    try{
+      const r=await api('/api/export_backup_file',{});
+      if(r&&r.ok&&r.path){
+        showToast('✅ 備份已存到：'+r.path);
+        return;
+      }
+      if(r&&r.ok===false&&r.msg&&r.msg!=='unknown(手機版)'){
+        showToast(r.msg);
+        return;
+      }
+    }catch(e){}
+    const r2=await api('/api/export_backup',{});
+    if(!r2||!r2.ok||!r2.data){
+      showToast('❌ 匯出失敗');
+      return;
+    }
+    const json=JSON.stringify(r2.data,null,1);
+    const blob=new Blob([json],{type:'application/json'});
+    const fname='放射師國考神器-備份-'+new Date().toISOString().slice(0,10)+'.json';
+    const file=new File([blob],fname,{type:'application/json'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      try{
+        await navigator.share({files:[file],title:'放射師國考神器備份'});
+        showToast('✅ 備份已分享（可存到自己的 Google 雲端硬碟）');
+        return;
+      }catch(e){
+        if(e&&e.name==='AbortError')return;
+      }
+    }
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=fname;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast('✅ 備份已下載（請存到自己的雲端硬碟）');
+  }catch(e){
+    showToast('❌ 匯出失敗：'+e.message);
+  }
+}
+async function restoreBackup(){
+  const inp=document.createElement('input');
+  inp.type='file';
+  inp.accept='.json,application/json';
+  inp.onchange=async()=>{
+    const f=inp.files[0];
+    if(!f)return;
+    if(!confirm('匯入會覆蓋同名的筆記/試題庫/試卷/考試紀錄，確定繼續？'))return;
+    showToast('📥 匯入中…');
+    try{
+      const txt=await f.text();
+      const obj=JSON.parse(txt);
+      const r=await api('/api/import_backup',{data:obj});
+      if(r&&r.ok){
+        showToast('✅ 已匯入 '+r.count+' 筆資料');
+        setTimeout(function(){location.reload();},800);
+      }else{
+        showToast('❌ 匯入失敗');
+      }
+    }catch(e){
+      showToast('❌ 不是有效的備份檔');
+    }
+    inp.remove();
+  };
+  inp.click();
+}
+function showBackupRemindModal(){
+  makeBkModal('💾 記得備份資料！',
+    '<p>你的筆記、試題庫、考試紀錄目前只存在<b>這台裝置</b>。建議現在備份一次，存到<b>你自己的 Google 雲端硬碟</b>（或其他雲端），換手機/換電腦就能還原！</p>'+
+    '<p style="font-size:12px;color:#888">手機版請選「Google Drive」；電腦版可選擇資料夾（選雲端硬碟資料夾即自動上傳）。</p>',
+    '<div style="text-align:right;margin-top:12px">'+
+      '<button id="bkLater" style="margin-right:8px">⏰ 10 分鐘後提醒</button>'+
+      '<button id="bkNoMore" style="margin-right:8px">🔕 本次不再提醒</button>'+
+            '<button id="bkHelpBtn" style="margin-right:8px;background:#0e9f6e;border-color:#0e9f6e;color:#fff">📖 備份說明</button>'+
+      '<button id="bkNow" style="background:#4f8cff;border-color:#4f8cff;color:#fff">💾 立即備份</button></div>');
+  document.getElementById('bkLater').onclick=function(){
+    const m=document.getElementById('bkModal');
+    if(m)m.remove();
+  };
+  document.getElementById('bkNoMore').onclick=function(){
+    bkSnoozeNow();
+    const m=document.getElementById('bkModal');
+    if(m)m.remove();
+  };
+  document.getElementById('bkHelpBtn').onclick=function(){
+    const m=document.getElementById('bkModal');
+    if(m)m.remove();
+    showBackupHelpModal();
+  };
+  document.getElementById('bkNow').onclick=function(){
+    const m=document.getElementById('bkModal');
+    if(m)m.remove();
+    exportBackup();
+  };
+}
+function showBackupHelpModal(){
+  makeBkModal('💾 備份說明',
+    '<div style="background:#fff8e1;border:1px solid #f5b301;border-radius:10px;padding:12px 14px;margin:8px 0">'+
+      '<b style="font-size:15px;color:#7a5200">✅ 單機使用不一定要備份</b>'+
+      '<p style="margin:6px 0 0;color:#7a5200">若你<b>不需要手機與電腦互相聯通</b>（例如只在一台電腦上使用），則<b>可以完全忽略備份功能</b>：</p>'+
+      '<ul style="margin:6px 0 0;padding-left:18px;color:#7a5200">'+
+        '<li>筆記、試題庫、試卷、考試紀錄都會<b>自動存檔在本地資料夾</b>（電腦版：放射師國考筆記 資料夾；手機版：手機瀏覽器記憶體內）</li>'+
+        '<li>資料會隨每次修改<b>自動儲存</b>（電腦版每 0.9 秒自動存檔），不需要手動匯出</li>'+
+        '<li>只要<b>不刪除該資料夾</b>、<b>不清理瀏覽器資料</b>、<b>不更換裝置</b>，資料一直都在</li>'+
+      '</ul>'+
+      '<p style="margin:6px 0 0;color:#7a5200">💡 只有當你<b>要換手機／換電腦／想手機電腦互通</b>時，才需要執行「匯出備份 → 存雲端 → 新裝置匯入備份」的流程。</p>'+
+    '</div>'+
+    '<div style="background:#ffe5e5;border:1px solid #e11d48;border-radius:10px;padding:12px 14px;margin:8px 0">'+
+      '<b style="font-size:15px;color:#8a0f22">⚠️ 手機版資料存在「瀏覽器」</b>'+
+      '<p style="margin:6px 0 0;color:#8a0f22">手機版的筆記、試題庫、考試紀錄<b>不是存在手機的檔案資料夾</b>，而是存在<b>你使用的瀏覽器（如 Chrome、Safari、三星瀏覽器）</b>的儲存空間內。</p>'+
+      '<ul style="margin:6px 0 0;padding-left:18px;color:#8a0f22">'+
+        '<li><b>關閉瀏覽器／重開機</b> → 資料<b>不會</b>消失 ✅</li>'+
+        '<li><b>手機「設定 → 清除瀏覽資料」</b> → 筆記／試題庫／考試紀錄<b>會全部不見</b> 💥</li>'+
+        '<li><b>改用「另一個瀏覽器」開啟</b>（例如 Chrome 改用三星瀏覽器）→ <b>看不到資料</b>（各自獨立）</li>'+
+        '<li><b>換手機</b> → 資料<b>不會跟隨</b>（除非先匯出備份）</li>'+
+      '</ul>'+
+      '<p style="margin:6px 0 0;color:#8a0f22">👉 <b>因此請務必定期按「💾 匯出備份」，把資料存到自己的 Google Drive</b>（或電腦），這樣就算清瀏覽資料、換瀏覽器、換手機都能還原！</p>'+
+    '</div>'+
+    '<p style="margin:8px 0 4px"><b>💡 核心觀念：</b></p>'+
+    '<ul style="margin:4px 0 8px;padding-left:18px">'+
+      '<li><b>「匯出備份」</b>＝ 把全部資料（筆記＋試題庫＋試卷＋考試紀錄）打包成 <b>1 個 JSON 檔</b></li>'+
+      '<li><b>「匯入備份」</b>＝ 把該檔的全部資料還原</li>'+
+      '<li>建議習慣：<b>每天用完匯出一次</b>，存到自己的雲端硬碟（推薦 Google Drive）</li>'+
+    '</ul>'+
+    '<h3 style="margin:12px 0 6px;color:#1f2937">📱 手機版</h3>'+
+    '<p style="margin:4px 0"><b>📤 匯出備份（上傳到雲端）</b></p>'+
+    '<ol style="margin:4px 0 8px;padding-left:20px">'+
+      '<li>打開手機版（網頁）</li>'+
+      '<li>按頂部工具列 <b>「💾 匯出備份」</b></li>'+
+      '<li>跳出<b>系統分享選單</b> → 選 <b>「Google Drive」</b></li>'+
+      '<li>選好儲存位置（建議：雲端硬碟根目錄或「放射師國考神器備份」資料夾）→ 儲存</li>'+
+      '<li>✅ <b>全部資料已上傳到自己的 Google Drive</b></li>'+
+    '</ol>'+
+    '<p style="margin:4px 0"><b>📥 匯入備份（從雲端還原）</b></p>'+
+    '<ol style="margin:4px 0 8px;padding-left:20px">'+
+      '<li>打開手機版（網頁）</li>'+
+      '<li>按 <b>「📥 匯入備份」</b></li>'+
+      '<li>檔案來源選 <b>「Google Drive」</b>（或「檔案」App → 找到備份檔）</li>'+
+      '<li>選「放射師國考神器-備份-日期.json」→ 確定</li>'+
+      '<li>✅ <b>全部資料還原到手機</b></li>'+
+    '</ol>'+
+    '<h3 style="margin:12px 0 6px;color:#1f2937">💻 電腦版</h3>'+
+    '<p style="margin:4px 0"><b>📤 匯出備份（可指定任何儲存資料夾！）</b></p>'+
+    '<ol style="margin:4px 0 8px;padding-left:20px">'+
+      '<li>打開程式（exe）</li>'+
+      '<li>按 <b>「💾 匯出備份」</b></li>'+
+      '<li>彈出<b>「另存新檔」視窗</b> → 任選你要存的地方：'+
+        '<ul style="margin:4px 0;padding-left:16px">'+
+          '<li>🟢 <b>雲端同步</b> → 選 <b>Google Drive 同步資料夾</b>（如 G:\\我的雲端硬碟\\...）→ 存檔即自動上傳雲端 ✅</li>'+
+          '<li>🔵 <b>想存本機</b> → <b>任意自選資料夾</b>（桌面、文件、下載、自建資料夾都行）✅</li>'+
+        '</ul></li>'+
+      '<li>按確定 → ✅ 備份檔已存到你所選的任何位置（檔名含日期）</li>'+
+    '</ol>'+
+    '<p style="margin:4px 0"><b>📥 匯入備份（從雲端還原到電腦）</b></p>'+
+    '<ol style="margin:4px 0 8px;padding-left:20px">'+
+      '<li>先從 <b>Google Drive 下載</b>「放射師國考神器-備份-日期.json」（或由 <b>Google Drive 同步資料夾自動更新</b>取得該檔）</li>'+
+      '<li>打開程式（exe）</li>'+
+      '<li>按 <b>「📥 匯入備份」</b></li>'+
+      '<li>選那個 JSON 檔 → 確定</li>'+
+      '<li>✅ <b>全部資料還原到你的「放射師國考筆記」資料夾</b></li>'+
+    '</ol>'+
+    '<h3 style="margin:12px 0 6px;color:#1f2937">🔄 標準跨裝置流程</h3>'+
+    '<div style="background:#f0f4fa;border:1px solid #cfd8e6;border-radius:8px;padding:10px 12px;margin:4px 0 8px;font-size:13px;line-height:1.8;white-space:pre-wrap">'+
+      '<b>手機 → 電腦</b>\n'+
+      '📱 手機：💾 匯出備份 → 分享到「Google Drive」→ 存進自己雲端\n'+
+      '　↓\n'+
+      '💻 電腦：從 Google Drive 下載該 JSON（或由同步資料夾取得）\n'+
+      '　↓\n'+
+      '💻 電腦：開程式 → 📥 匯入備份 → 選該 JSON → 確定\n'+
+      '　↓\n'+
+      '✅ 手機的筆記/試題庫/試卷/考試紀錄 全部出現在電腦\n\n'+
+      '<b>電腦 → 手機</b>\n'+
+      '💻 電腦：💾 匯出備份 → 選「Google Drive 資料夾」→ 直接存雲端\n'+
+      '　↓\n'+
+      '📱 手機：開手機版 → 📥 匯入備份 → 選 Google Drive 上的該 JSON → 確定\n'+
+      '　↓\n'+
+      '✅ 電腦的資料 全部出現在手機'+
+    '</div>'+
+    '<h3 style="margin:12px 0 6px;color:#1f2937">⚠️ 重要注意事項</h3>'+
+    '<table style="border-collapse:collapse;width:100%;font-size:13px">'+
+      '<tr><th style="background:#FFF3CD;border:1px solid #bbb;padding:6px;width:34%">事項</th><th style="background:#FFF3CD;border:1px solid #bbb;padding:6px">說明</th></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>匯入會覆蓋</b></td><td style="border:1px solid #bbb;padding:6px">同名筆記/試卷/考試紀錄會被備份檔蓋掉（還原的正常行為）</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>定期匯出</b></td><td style="border:1px solid #bbb;padding:6px">每次匯出 = 當下全部資料快照；若再改動請再匯出一次</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>檔名含日期</b></td><td style="border:1px solid #bbb;padding:6px">「放射師國考神器-備份-2025-05-14.json」，可看出備份時間</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>選雲端資料夾 = 自動上傳</b></td><td style="border:1px solid #bbb;padding:6px">電腦版匯出時選「G:\\我的雲端硬碟\\...」→ Drive 桌面版連網即上傳 ✅</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>本機可存任何位置</b></td><td style="border:1px solid #bbb;padding:6px">匯出時選任意資料夾即可（桌面/文件/自建資料夾皆可）</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>不要傳公開群組</b></td><td style="border:1px solid #bbb;padding:6px">內含個人筆記/考試紀錄，只存自己雲端或私傳給自己</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>⚠️ 清除瀏覽器資料＝資料全消失</b></td><td style="border:1px solid #bbb;padding:6px">手機版資料存在<b>手機瀏覽器</b>（非記憶體、非雲端）；在手機「設定 → 清除瀏覽資料」後，筆記／試題庫／考試紀錄<b>會全部不見</b>！請務必先用「💾 匯出備份」存到自己的 Google Drive。</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>換瀏覽器＝看不到</b></td><td style="border:1px solid #bbb;padding:6px">Chrome、三星瀏覽器、Safari、Edge 的資料庫<b>各自獨立</b>；用手機「另一個瀏覽器」開啟，需要先按「📥 匯入備份」還原。</td></tr>'+
+      '<tr><td style="border:1px solid #bbb;padding:6px"><b>換手機＝不跟隨</b></td><td style="border:1px solid #bbb;padding:6px">資料只存在「當下這支手機的瀏覽器」；換機前務必「💾 匯出備份」到 Google Drive，新機再「📥 匯入備份」。</td></tr>'+
+    '</table>'+
+    '<p style="margin:8px 0 0;color:#888;font-size:12px">📌 按鈕位置：頂部工具列「💾 匯出備份」「📥 匯入備份」；首頁綠色「💾 備份說明」可隨時查看此說明。</p>',
+    '<div style="text-align:right;margin-top:12px">'+
+      '<button id="bkGo" style="background:#0e9f6e;border-color:#0e9f6e;color:#fff">💾 現在就去備份</button></div>');
+  document.getElementById('bkGo').onclick=function(){
+    const m=document.getElementById('bkModal');
+    if(m)m.remove();
+    exportBackup();
+  };
+}
+$('btnBackup').onclick=exportBackup;
+$('btnRestore').onclick=restoreBackup;
+$('navBackupActions').onclick=showBackupHelpModal;
+let bkSnooze=false;
+/* ═══════ 每次提醒都彈「完整備份說明」大框 ═══════ */
+const bkRemindTimer=setInterval(function(){
+  if(!bkSnooze&&!document.hidden)showBackupHelpModal();
+},10*60*1000);
+function bkSnoozeNow(){
+  bkSnooze=true;
+  try{api('/api/remind_snooze',{});}catch(e){}
+  showToast('🔕 本次不再提醒（下次開啟仍會提醒）');
+}
+/* ═══════ 提醒時機：金鑰後馬上彈；非首次開啟馬上彈；電腦首次等選完資料夾 ═══════ */
+function scheduleBackupReminders(){
+  if(bkSnooze)return;
+  /* 剛剛解鎖金鑰 → 馬上彈 */
+  var just=false;
+  try{
+    if(sessionStorage.getItem('justUnlocked')==='1'){
+      just=true;
+      sessionStorage.removeItem('justUnlocked');
+    }
+  }catch(e){}
+  var hasBackend=false;
+  try{
+    var xhr=new XMLHttpRequest();
+    xhr.open('GET','/api/config_ready',false);
+    xhr.send();
+    if(xhr.status===200){
+      hasBackend=true;
+      var j=JSON.parse(xhr.responseText);
+      if(j&&j.ok){
+        /* ✅ 電腦版非首次（資料夾已設）→ 馬上彈（剛剛解鎖 0.3 秒；否則 0.5 秒） */
+        setTimeout(showBackupHelpModal, just?300:500);
+        return;
+      }
+    }
+  }catch(e){}
+  if(!hasBackend){
+    /* ✅ 手機版：剛剛解鎖 → 0.3 秒馬上彈；否則 0.5 秒 */
+    setTimeout(showBackupHelpModal, just?300:500);
+    return;
+  }
+  /* ✅ 電腦版首次（資料夾還沒設）→ 等選完資料夾再彈 */
+  var tries=0;
+  var iv=setInterval(function(){
+    tries++;
+    try{
+      var x2=new XMLHttpRequest();
+      x2.open('GET','/api/config_ready',false);
+      x2.send();
+      if(x2.status===200){
+        var j2=JSON.parse(x2.responseText);
+        if(j2&&j2.ok){
+          clearInterval(iv);
+          setTimeout(showBackupHelpModal,300);
+        }
+      }
+    }catch(e){}
+    if(tries>180)clearInterval(iv);
+  },1000);
+}
+window.addEventListener('beforeunload',function(){
+  if(!bkSnooze)return '哆啦呦噠提醒您:記得先按「💾 匯出備份」存到自己的雲端硬碟！祝國考一次過!';
+});
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='hidden'&&!bkSnooze){
+    setTimeout(function(){showBackupRemindModal();},300);
+  }
+});
+window.addEventListener('resize',updateImgUI);
+window.addEventListener('resize',()=>{
+  clearTimeout(statsResizeTimer);
+  statsResizeTimer=setTimeout(()=>{
+    if(statsData&&exam.style.display!=='none'&&document.querySelector('#examBody canvas')){
+      showStatsView(statsData);
+    }
+  },200);
+});
+/* ═══════ Word 快捷鍵 + A+/A- 快捷（所有筆記編輯處通用） ═══════ */
+function currentEditable(){
+  const ae=document.activeElement;
+  if(ae&&ae.isContentEditable)return ae;
+  if(typeof editMode!=='undefined'&&editMode)return docEl;
+  if(typeof editModeLib!=='undefined'&&editModeLib){
+    if(typeof activeLibBody==='function'){
+      const b=activeLibBody();
+      if(b)return b;
+    }
+    const first=libBody.querySelector('.libq-body');
+    if(first)return first;
+  }
+  const cv=document.getElementById('cmpRightR');
+  if(cv&&cv.isContentEditable)return cv;
+  const wins=document.querySelectorAll('.win');
+  for(let i=0;i<wins.length;i++){
+    const wbody=wins[i].querySelector('.win-body, .win-right-body');
+    if(wbody&&wbody.isContentEditable)return wbody;
+  }
+  return null;
+}
+function execShortcut(cmd,val){
+  const el=currentEditable();
+  if(!el)return false;
+  el.focus();
+  try{
+    document.execCommand('styleWithCSS',false,true);
+    document.execCommand(cmd,false,val||null);
+  }catch(e){}
+  return true;
+}
+function afterEditableChange(el){
+  if(!el)return;
+  if(el===docEl){
+    noteSnapNow();
+    scheduleAutoSave();
+    return;
+  }
+  if(typeof editModeLib!=='undefined'&&editModeLib){
+    const card=el.closest('.libq');
+    if(card&&typeof markDirty==='function')markDirty(card);
+    return;
+  }
+  if(el.id==='cmpRightR'){
+    if(typeof applyCompareEdit==='function')applyCompareEdit(cmpSrc);
+    return;
+  }
+  try{el.dispatchEvent(new Event('input'));}catch(e){}
+}
+function shortcutFontSel(delta){
+  const el=currentEditable();
+  if(!el)return;
+  if(typeof fontSel!=='function')return;
+  const r=fontSel(el,delta);
+  if(r){
+    afterEditableChange(el);
+    showToast('已將選字改為 '+r.size+'px');
+  }
+}
+document.addEventListener('keydown',function(e){
+  if(!(e.ctrlKey||e.metaKey))return;
+  const k=(e.key||'').toLowerCase();
+  if(k==='z'&&!e.shiftKey){
+    e.preventDefault();
+    if(noteUndo.length>1){
+      noteRedo.push(noteUndo.pop());
+      noteRestore(noteUndo[noteUndo.length-1]);
+      showToast('↶ 已復原筆記');
+    }
+  }else if(k==='y'||(k==='z'&&e.shiftKey)){
+    e.preventDefault();
+    if(noteRedo.length){
+      const s=noteRedo.pop();
+      noteUndo.push(s);
+      noteRestore(s);
+      showToast('↷ 已重做筆記');
+    }
+  }else if(k==='b'){
+    e.preventDefault();
+    execShortcut('bold');
+    afterEditableChange(currentEditable());
+  }else if(k==='i'){
+    e.preventDefault();
+    execShortcut('italic');
+    afterEditableChange(currentEditable());
+  }else if(k==='u'){
+    e.preventDefault();
+    execShortcut('underline');
+    afterEditableChange(currentEditable());
+  }else if(k==='s'){
+    e.preventDefault();
+    saveNotes();
+    autoSavePaper();
+    showToast('💾 已手動儲存');
+  }else if(k==='='){
+    e.preventDefault();
+    if(e.shiftKey)execShortcut('superscript');
+    else execShortcut('subscript');
+    afterEditableChange(currentEditable());
+  }else if(e.key===']'){
+    e.preventDefault();
+    shortcutFontSel(2);
+  }else if(e.key==='['){
+    e.preventDefault();
+    shortcutFontSel(-2);
+  }
+},true);
+/* ═══════ 按任何格式按鈕時不讓選取消失（A+/A-/B/I/顏色等） ═══════ */
+['viewTop','libTools'].forEach(function(tbId){
+  const tb=document.getElementById(tbId);
+  if(!tb)return;
+  tb.addEventListener('mousedown',function(e){
+    if(e.target&&(e.target.tagName==='BUTTON'||e.target.matches('.hl-btn'))){
+      e.preventDefault();
+    }
+  });
+});
+/* ═══════ 手機版（無後端）：隱藏「更改筆記位置」按鈕 ═══════ */
+(function(){
+  let backend=false;
+  try{
+    const x=new XMLHttpRequest();
+    x.open('GET','/api/index',false);
+    x.send();
+    if(x.status===200)backend=true;
+  }catch(e){}
+  if(!backend){
+    const b=document.getElementById('btnChangeDir');
+    if(b)b.style.display='none';
+  }
+})();
+/* ═══════ 手機版才顯示進度條；電腦版直接載入 ═══════ */
+if(window.MOBILE_DATA||window.MOBILE_INDEX){
+  bootShow();
+  bootSimulate();
+  loadIndex().then(function(){bootDone();}).catch(function(){bootDone();});
+}else{
+  if(!window.MOBILE_INDEX&&!window.MOBILE_DATA){document.body.insertAdjacentHTML('afterbegin','<div style=\"background:#e11d48;color:#fff;padding:10px;text-align:center;font-size:14px;font-weight:700\">⚠️ 資料檔未載入</div>');}
+loadIndex();
+}
+scheduleBackupReminders();
+</script>
+</body>
+</html>
